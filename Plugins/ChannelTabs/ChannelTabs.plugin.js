@@ -8,7 +8,7 @@
 */
 /*@cc_on
 @if (@_jscript)
-	
+
 	// Offer to self-install for clueless users that try to run this directly.
 	var shell = WScript.CreateObject("WScript.Shell");
 	var fs = new ActiveXObject("Scripting.FileSystemObject");
@@ -31,7 +31,7 @@
 @else@*/
 
 module.exports = (() => {
-	
+
 	const config = {
 		info: {
 			name: "ChannelTabs",
@@ -76,7 +76,7 @@ module.exports = (() => {
 			}
 		]
 	};
-	
+
 	return !global.ZeresPluginLibrary ? class {
 		constructor(){ this._config = config; }
 		getName(){ return config.info.name; }
@@ -84,7 +84,7 @@ module.exports = (() => {
 		getDescription(){ return config.info.description + " **Install [ZeresPluginLibrary](https://betterdiscord.app/Download?id=9) and restart discord to use this plugin!**"; }
 		getVersion(){ return config.info.version; }
 		load(){
-			BdApi.showConfirmationModal("Library plugin is needed", 
+			BdApi.showConfirmationModal("Library plugin is needed",
 				[`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`], {
 					confirmText: "Download",
 					cancelText: "Cancel",
@@ -201,7 +201,7 @@ module.exports = (() => {
 			var currentGroupOpened = -1;
 
 			//#endregion
-			
+
 			//#region Context Menu Constructors
 
 			function CreateGuildContextMenuChildren(instance, props, channel)
@@ -324,7 +324,7 @@ module.exports = (() => {
 											checked: () => props.minimized,
 											action: ()=> props.minimizeTab(props.tabIndex)
 										}
-										
+
 									]
 								},
 								{
@@ -561,7 +561,7 @@ module.exports = (() => {
 				);
 			};
 
-			function CreateFavBarContextMenu(props,e) 
+			function CreateFavBarContextMenu(props,e)
 			{
 				ContextMenu.open(
 					e,
@@ -594,7 +594,7 @@ module.exports = (() => {
 					}
 				);
 			};
-			
+
 			function CreateSettingsContextMenu(instance, e)
 			{
 				ContextMenu.open(
@@ -615,12 +615,12 @@ module.exports = (() => {
 										{
 											type: "separator"
 										},
-										{											
+										{
 											id: "shortcutLabel",
 											disabled: true,
 											label: "Shortcuts:"
 										},
-										{											
+										{
 											id: "shortcutLabelKeys",
 											disabled: true,
 											render: () => {
@@ -633,7 +633,7 @@ module.exports = (() => {
 										{
 											type: "separator"
 										},
-										{											
+										{
 											label: "Settings:",
 											id: "settingHeader",
 											disabled: true
@@ -1132,7 +1132,7 @@ module.exports = (() => {
 											]
 										},
 
-								
+
 									]
 								}
 							)
@@ -1175,7 +1175,7 @@ module.exports = (() => {
 
 			const updateFavEntry = (fav)=>
 			{
-				if(fav.guildId) 
+				if(fav.guildId)
 				{
 					const channelIds = getGuildChannels(fav.guildId).filter(channel=>(PermissionUtils.can(Permissions.VIEW_CHANNEL, channel)) && (!MutedStore.isChannelMuted(channel.guild_id, channel.id))).map(channel=>channel.id);
 					return {
@@ -1188,7 +1188,7 @@ module.exports = (() => {
 						currentStatus: getCurrentUserStatus(fav.url)
 					};
 				}
-				else 
+				else
 				{
 					return {
 						unreadCount: UnreadStateStore.getUnreadCount(fav.channelId) || UnreadStateStore.getMentionCount(fav.channelId) || (UnreadStateStore.hasUnread(fav.channelId) ? 1 : 0),
@@ -1227,7 +1227,7 @@ module.exports = (() => {
 			};
 
 			const getChannelTypingTooltipText = (userIds) =>
-			{				
+			{
 				if (userIds)
 				{
 					const usernames = userIds.map(userId => UserStore.getUser(userId)).filter(user => user).map(user => user.tag);
@@ -1250,31 +1250,31 @@ module.exports = (() => {
 
 			};
 
-			const getChannelTypingUsers = (channel_id) => 
+			const getChannelTypingUsers = (channel_id) =>
 			{
 				const channel = ChannelStore.getChannel(channel_id);
 				const selfId = UserStore.getCurrentUser()?.id;
 				if (channel)
-				{	
+				{
 					const userIds = Object.keys(UserTypingStore.getTypingUsers(channel_id)).filter(uId => (uId !== selfId));
 					const typingUsers = [...new Set(userIds)];
 					return typingUsers;
 				}
 				return null;
-			};	
+			};
 
-			const isChannelTyping = (channel_id) => 
+			const isChannelTyping = (channel_id) =>
 			{
 				const channel = ChannelStore.getChannel(channel_id);
 				const selfId = UserStore.getCurrentUser()?.id;
 				if (channel)
-				{	
+				{
 					const userIds = Object.keys(UserTypingStore.getTypingUsers(channel_id)).filter(uId => (uId !== selfId));
 					const typingUsers = [...new Set(userIds)];
 					if (typingUsers) return typingUsers.length === 0 ? false : true;
 				}
 				return false;
-			};	
+			};
 
 			const isChannelDM = (channel_id) =>
 			{
@@ -1294,7 +1294,7 @@ module.exports = (() => {
 					else if(pathname.match(/^\/[a-z\-]+$/)) return pathname.substr(1).split("-").map(part => part.substr(0, 1).toUpperCase() + part.substr(1)).join(" ");
 					else return pathname;
 				}
-			};	
+			};
 
 			const getCurrentIconUrl = (pathname = location.pathname)=>
 			{
@@ -1317,12 +1317,12 @@ module.exports = (() => {
 			};
 
 			//#endregion
-			
+
 			//#region Tab Definitions
 
 			const GetTabStyles = (viewMode, item)=>
 			{
-				if (item === "unreadBadge") 
+				if (item === "unreadBadge")
 				{
 					if (viewMode === "classic") return " channelTabs-classicBadgeAlignment";
 					else if (viewMode === "alt") return " channelTabs-badgeAlignLeft";
@@ -1397,7 +1397,7 @@ module.exports = (() => {
 				const text = getChannelTypingTooltipText(userIds);
 				return React.createElement(
 					"div",
-					{ 
+					{
 						className: "channelTabs-TypingContainer" + GetTabStyles(viewMode, "typingBadge")
 					},
 					React.createElement(
@@ -1431,8 +1431,8 @@ module.exports = (() => {
 							height: "20",
 							viewBox: "0 0 20 20"
 						},
-						props.currentStatus === "none" 
-						? React.createElement("foreignObject", { x: 0, y: 0, width: 20, height: 20 }, React.createElement(TabIcon, { iconUrl: props.iconUrl })) 
+						props.currentStatus === "none"
+						? React.createElement("foreignObject", { x: 0, y: 0, width: 20, height: 20 }, React.createElement(TabIcon, { iconUrl: props.iconUrl }))
 						: React.createElement("foreignObject", { x: 0, y: 0, width: 20, height: 20, mask: "url(#svg-mask-avatar-status-round-20)" }, React.createElement(TabIcon, { iconUrl: props.iconUrl })),
 						props.currentStatus === "none" ? null : React.createElement(TabStatus, { currentStatus: props.currentStatus })
 					),
@@ -1471,8 +1471,8 @@ module.exports = (() => {
 							height: "20",
 							viewBox: "0 0 20 20"
 						},
-						props.currentStatus === "none" 
-						? React.createElement("foreignObject", { x: 0, y: 0, width: 20, height: 20 }, React.createElement(TabIcon, { iconUrl: props.iconUrl })) 
+						props.currentStatus === "none"
+						? React.createElement("foreignObject", { x: 0, y: 0, width: 20, height: 20 }, React.createElement(TabIcon, { iconUrl: props.iconUrl }))
 						: React.createElement("foreignObject", { x: 0, y: 0, width: 20, height: 20, mask: "url(#svg-mask-avatar-status-round-20)" }, React.createElement(TabIcon, { iconUrl: props.iconUrl })),
 						props.currentStatus === "none" ? null : React.createElement(TabStatus, { currentStatus: props.currentStatus })
 					),
@@ -1517,7 +1517,7 @@ module.exports = (() => {
 						if (currentTabDragIndex == props.tabIndex || currentTabDragIndex == -1) return;
 						currentTabDragDestinationIndex = props.tabIndex;
 					},
-					
+
 					onMouseDown: e => {
 						let mouseMove = e2 => {
 							if (Math.sqrt((e.pageX - e2.pageX)**2) > 20 || Math.sqrt((e.pageY - e2.pageY)**2) > 20) {
@@ -1553,20 +1553,20 @@ module.exports = (() => {
 						document.addEventListener("mouseup", mouseUp);
 					},
 				},
-				
+
 				props.compactStyle ? CompactTab(props) : CozyTab(props),
 				React.createElement(TabClose, {tabCount: props.tabCount, closeTab: ()=>props.closeTab(props.tabIndex)})
-			);	
+			);
 
 			//#endregion
-						
+
 			//#region Fav Definitions
 
 			const FavMoveToGroupList = props => {
 				var groups = props.favGroups.map(
 
 					(group, index) => {
-		
+
 						var entry = {
 							label: group.name,
 							id: "entry" + index,
@@ -1650,7 +1650,7 @@ module.exports = (() => {
 			const Fav = props=>React.createElement(
 				"div",
 				{
-					className: "channelTabs-fav" 
+					className: "channelTabs-fav"
 									+ (props.channelId ? " channelTabs-channel" : props.guildId ? " channelTabs-guild" : "")
 									+ (props.selected ? " channelTabs-selected" : "")
 									+ (props.minimized ? " channelTabs-minimized" : "")
@@ -1669,7 +1669,7 @@ module.exports = (() => {
 					onMouseOver: e=> {
 						if (currentFavDragIndex == props.favIndex || currentFavDragIndex == -1) return;
 						currentFavDragDestinationIndex = props.favIndex;
-					},					
+					},
 					onMouseDown: e => {
 						let mouseMove = e2 => {
 							if (Math.sqrt((e.pageX - e2.pageX)**2) > 20 || Math.sqrt((e.pageY - e2.pageY)**2) > 20) {
@@ -1713,8 +1713,8 @@ module.exports = (() => {
 						height: "20",
 						viewBox: "0 0 20 20"
 					},
-					props.currentStatus === "none" 
-					? React.createElement("foreignObject", { x: 0, y: 0, width: 20, height: 20 }, React.createElement(FavIcon, { iconUrl: props.iconUrl })) 
+					props.currentStatus === "none"
+					? React.createElement("foreignObject", { x: 0, y: 0, width: 20, height: 20 }, React.createElement(FavIcon, { iconUrl: props.iconUrl }))
 					: React.createElement("foreignObject", { x: 0, y: 0, width: 20, height: 20, mask: "url(#svg-mask-avatar-status-round-20)" }, React.createElement(FavIcon, { iconUrl: props.iconUrl })),
 					props.currentStatus === "none" ? null : React.createElement(FavStatus, { currentStatus: props.currentStatus })
 				),
@@ -1750,7 +1750,7 @@ module.exports = (() => {
 					onClick: props.openNewTab
 				},
 				React.createElement(PlusAlt, {})
-			);		
+			);
 
 			//#endregion
 
@@ -1765,7 +1765,7 @@ module.exports = (() => {
 				var isDefault = (props.group === null);
 
 				return props.favs.filter(item => item).map(
-					(fav, favIndex) => 
+					(fav, favIndex) =>
 					{
 						var canCreate = (isDefault ? fav.groupId === -1 : fav.groupId === props.group.groupId);
 						return canCreate ? React.createElement(
@@ -1808,14 +1808,14 @@ module.exports = (() => {
 			};
 
 			const FavFolder = props=>React.createElement(
-					"div", 
+					"div",
 					{
 						className: "channelTabs-favGroup",
 						onContextMenu: e=>{CreateFavGroupContextMenu(props,e)},
 						onMouseOver: e=> {
 							if (currentGroupDragIndex == props.groupIndex || currentGroupDragIndex == -1) return;
 							currentGroupDragDestinationIndex = props.groupIndex;
-						},					
+						},
 						onMouseDown: e => {
 							let mouseMove = e2 => {
 								if (Math.sqrt((e.pageX - e2.pageX)**2) > 20 || Math.sqrt((e.pageY - e2.pageY)**2) > 20) {
@@ -1850,36 +1850,36 @@ module.exports = (() => {
 							document.addEventListener("mousemove", mouseMove);
 							document.addEventListener("mouseup", mouseUp);
 						}
-					}, 
+					},
 				React.createElement(
-					"div", 
+					"div",
 					{
 						className: "channelTabs-favGroupBtn",
 						onClick: () => {
 							closeAllDropdowns();
 							document.getElementById("favGroup-content-" + props.groupIndex).classList.toggle("channelTabs-favGroupShow");
-							currentGroupOpened = props.groupIndex;			
+							currentGroupOpened = props.groupIndex;
 						}
-					}, 
+					},
 					props.favGroup.name,
 					props.showFavGroupMentionBadges ? props.mentionCountGroup == 0 && !props.showEmptyFavGroupBadges ? null : React.createElement(FavMentionBadge, {mentionCount: props.mentionCountGroup}) : null,
 					props.showFavGroupUnreadBadges ? props.unreadCountGroup == 0 &&  !props.showEmptyFavGroupBadges ? null : React.createElement(FavUnreadBadge, {unreadCount: props.unreadCountGroup, unreadEstimated: props.unreadEstimatedGroup, hasUnread: props.hasUnreadGroup}) : null,
 					props.showFavGroupTypingBadge && (props.isTypingGroup) ? React.createElement(FavTypingBadge, {isTyping: props.isTypingGroup, userIds: null}) : null
-				), 
+				),
 				React.createElement(
-					"div", 
+					"div",
 					{
 						className: "channelTabs-favGroup-content" + (currentGroupOpened === props.groupIndex ? " channelTabs-favGroupShow" : ""),
 						id: "favGroup-content-" + props.groupIndex
-					}, 
+					},
 					React.createElement(FavItems, {group: props.favGroup, ...props})
 				)
 			);
-			
-			const FavFolders = (props)=>{		
+
+			const FavFolders = (props)=>{
 				return props.favGroups.map((favGroup, index) =>
 					{
-						return React.createElement(Flux.connectStores([UnreadStateStore, SelectedChannelStore, UserTypingStore], () => 
+						return React.createElement(Flux.connectStores([UnreadStateStore, SelectedChannelStore, UserTypingStore], () =>
 						{
 
 							var unreadCount = 0;
@@ -1888,10 +1888,10 @@ module.exports = (() => {
 							var mentionCount = 0;
 							var isTyping = false;
 
-							props.favs.filter(item => item).forEach((fav, favIndex) => 
-								{									
+							props.favs.filter(item => item).forEach((fav, favIndex) =>
+								{
 									var canCreate = fav.groupId === favGroup.groupId;
-									if (canCreate) 
+									if (canCreate)
 									{
 										var hasUnreads = isChannelDM(fav.channelId);
 										var result = updateFavEntry(fav);
@@ -1900,7 +1900,7 @@ module.exports = (() => {
 										if (!hasUnreads) unreadEstimated += result.unreadEstimated;
 										if (!hasUnreads) hasUnread = (result.hasUnread ? true : hasUnread);
 										isTyping = (result.isTyping ? true : isTyping);
-									} 
+									}
 								}
 							);
 							return {
@@ -1913,7 +1913,7 @@ module.exports = (() => {
 							};
 						})
 						(
-							result => 
+							result =>
 							{
 								return React.createElement(FavFolder,
 								{
@@ -1938,7 +1938,7 @@ module.exports = (() => {
 			};
 
 			//#endregion
-						
+
 			//#region FavBar/TopBar/TabBar Definitions
 
 			function nextTab(){
@@ -2028,7 +2028,7 @@ module.exports = (() => {
 					openNewTab: props.openNewTab
 				})
 			);
-			
+
 			const FavBar = props=>React.createElement(
 				"div",
 				{
@@ -2083,6 +2083,7 @@ module.exports = (() => {
 					this.renameFav = this.renameFav.bind(this);
 					this.deleteFav = this.deleteFav.bind(this);
 					this.addToFavs = this.addToFavs.bind(this);
+					this.refreshGuildIcons = this.refreshGuildIcons.bind(this);
 					this.minimizeTab = this.minimizeTab.bind(this);
 					this.minimizeFav = this.minimizeFav.bind(this);
 					this.moveTab = this.moveTab.bind(this);
@@ -2097,6 +2098,10 @@ module.exports = (() => {
 					this.openFavInNewTab = this.openFavInNewTab.bind(this);
 					this.openFavGroupInNewTab = this.openFavGroupInNewTab.bind(this);
 					this.hideFavBar = this.hideFavBar.bind(this);
+				}
+
+				componentDidMount(){
+					this.refreshGuildIcons()
 				}
 
 				//#endregion
@@ -2127,7 +2132,7 @@ module.exports = (() => {
 					NavigationUtils.transitionTo(this.state.tabs[tabIndex].url);
 					switching = false;
 				}
-				
+
 				closeTab(tabIndex, mode){
 
 					if(this.state.tabs.length === 1) return;
@@ -2254,6 +2259,17 @@ module.exports = (() => {
 					}, this.props.plugin.saveSettings);
 				}
 
+				refreshGuildIcons(){
+					this.setState({
+						favs: this.state.favs.map( fav => {
+							return {
+								...fav,
+								iconUrl: getCurrentIconUrl( fav.url ),
+							}
+						})
+					}, this.props.plugin.saveSettings);
+				}
+
 				moveFav(fromIndex, toIndex){
 					if(fromIndex === toIndex) return;
 					const favs = this.state.favs.filter((fav, index)=>index !== fromIndex);
@@ -2271,7 +2287,7 @@ module.exports = (() => {
 					var isUnique = false;
 					var duplicateFound = false;
 
-					while (!isUnique) 
+					while (!isUnique)
 					{
 						for (var i = 0; i < this.state.favGroups.length; i++)
 						{
@@ -2283,7 +2299,7 @@ module.exports = (() => {
 						{
 							generatedId++;
 							duplicateFound = false;
-						} 		
+						}
 					}
 					return generatedId;
 				}
@@ -2347,11 +2363,11 @@ module.exports = (() => {
 				{
 					this.setState({
 						favs: this.state.favs.map((fav, index)=>{
-							if (index === favIndex) 
+							if (index === favIndex)
 							{
 								return Object.assign({}, fav, {groupId: groupId});
-							} 
-							else 
+							}
+							else
 							{
 								return Object.assign({}, fav);
 							}
@@ -2372,7 +2388,7 @@ module.exports = (() => {
 
 				saveChannel(guildId, channelId, name, iconUrl)
 				{
-					if (this.state.alwaysFocusNewTabs) 
+					if (this.state.alwaysFocusNewTabs)
 					{
 						//Open and Focus New Tab
 						const newTabIndex = this.state.tabs.length;
@@ -2391,7 +2407,7 @@ module.exports = (() => {
 							this.switchToTab(newTabIndex);
 						});
 					}
-					else 
+					else
 					{
 						//Open New Tab
 						this.setState({
@@ -2434,7 +2450,7 @@ module.exports = (() => {
 
 				openFavInNewTab(fav, isGroup)
 				{
-					if (this.state.alwaysFocusNewTabs && !isGroup) 
+					if (this.state.alwaysFocusNewTabs && !isGroup)
 					{
 						//Opens and Focuses New Tab
 						const newTabIndex = this.state.tabs.length;
@@ -2453,7 +2469,7 @@ module.exports = (() => {
 							this.switchToTab(newTabIndex);
 						});
 					}
-					else 
+					else
 					{
 						//Opens New Tab
 						const url = fav.url + (fav.guildId ? `/${fav.guildId}` : "");
@@ -2473,10 +2489,10 @@ module.exports = (() => {
 				openFavGroupInNewTab(groupId)
 				{
 					this.state.favs.filter(item => item).map(
-						(fav, favIndex) => 
+						(fav, favIndex) =>
 						{
 							var canCreate = (fav.groupId === groupId);
-							if (canCreate) 
+							if (canCreate)
 							{
 								this.openFavInNewTab(fav, true);
 							}
@@ -2494,7 +2510,7 @@ module.exports = (() => {
 						{
 							id: "channelTabs-container"
 						},
-						!this.state.showQuickSettings ? null : React.createElement('div', 
+						!this.state.showQuickSettings ? null : React.createElement('div',
 						{
 							id: "channelTabs-settingsMenu",
 							dangerouslySetInnerHTML: { __html: SettingsMenuIcon },
@@ -2553,7 +2569,7 @@ module.exports = (() => {
 				}
 
 				//#endregion
-			
+
 			};
 
 			const TopBarRef = React.createRef();
@@ -2562,14 +2578,14 @@ module.exports = (() => {
 
 			//#region Plugin Decleration
 
-			return class ChannelTabs extends Plugin 
+			return class ChannelTabs extends Plugin
 			{
 				//#region Start/Stop Functions
 
 				constructor(){
 					super();
 				}
-				
+
 				onStart(isRetry = false){
 					//console.warn("CT Start");
 					if(isRetry && !BdApi.Plugins.isEnabled(config.info.name)) return;
@@ -2589,7 +2605,7 @@ module.exports = (() => {
 					document.addEventListener("keydown", this.keybindHandler);
 					window.onclick = (event) => this.clickHandler(event);
 				}
-				
+
 				onStop(){
 					this.removeStyle();
 					document.removeEventListener("keydown", this.keybindHandler);
@@ -2601,13 +2617,13 @@ module.exports = (() => {
 				}
 
 				//#endregion
-				
+
 				//#region Styles
 
 				applyStyle()
 				{
 					const CompactVariables = `
-						:root {	
+						:root {
 							--channelTabs-tabHeight: 22px;
 							--channelTabs-favHeight: 22px;
 							--channelTabs-tabNameFontSize: 12px;
@@ -2616,7 +2632,7 @@ module.exports = (() => {
 					`;
 
 					const CozyVariables = `
-						:root {	
+						:root {
 							--channelTabs-tabHeight: 32px;
 							--channelTabs-favHeight: 28px;
 							--channelTabs-tabNameFontSize: 13px;
@@ -2625,7 +2641,7 @@ module.exports = (() => {
 					`;
 
 					const ConstantVariables = `
-						:root {	
+						:root {
 							--channelTabs-tabWidth: 220px;
 							--channelTabs-tabWidthMin: ${this.settings.tabWidthMin}px;
 						}
@@ -2641,11 +2657,11 @@ module.exports = (() => {
 							background-color: var(--interactive-normal);
 							opacity: 0.5;
 						}
-						
+
 						#app-mount .channelTabs-selected .channelTabs-tabName {
 							background-color: var(--interactive-active);
 						}
-						
+
 						#app-mount .channelTabs-favName {
 							color: transparent;
 							background-color: var(--interactive-normal);
@@ -2664,7 +2680,7 @@ module.exports = (() => {
 							-webkit-clip-path: inset(1px round 50%);
 							clip-path: inset(2px round 50%);
 						}
-						
+
 						.channelTabs-tabIconWrapper rect,
 						.channelTabs-favIconWrapper rect {
 							x: 0;
@@ -2678,19 +2694,19 @@ module.exports = (() => {
 							width: 20px;
 							stroke-width: 2px;
 						}
-						
+
 						.channelTabs-onlineIcon {
 							stroke: hsl(139, calc(var(--saturation-factor, 1) * 47.3%), 43.9%);
 						}
-						
+
 						.channelTabs-idleIcon {
 							stroke: hsl(38, calc(var(--saturation-factor, 1) * 95.7%), 54.1%);
 						}
-						
+
 						.channelTabs-doNotDisturbIcon {
 							stroke: hsl(359, calc(var(--saturation-factor, 1) * 82.6%), 59.4%);
 						}
-						
+
 						.channelTabs-offlineIcon {
 							stroke: hsl(214, calc(var(--saturation-factor, 1) * 9.9%), 50.4%);
 						}
@@ -2701,33 +2717,33 @@ module.exports = (() => {
 							display:flex;
 							margin: 0 6px 3px 0;
 						}
-						
+
 						.channelTabs-tabNavClose svg {
 							transform: scale(0.75);
 						}
-						
+
 						.channelTabs-tabNavLeft svg,
 						.channelTabs-tabNavRight svg {
 							transform: scale(0.6);
 						}
-						
+
 						/* if clickable */
 						.channelTabs-tabContainer .channelTabs-tabNav>div:hover {
 							color: var(--interactive-hover);
 							background-color: var(--background-modifier-hover);
 						}
-						
+
 						.channelTabs-tabContainer .channelTabs-tabNav>div:active {
 							color: var(--interactive-active);
 							background-color: var(--background-modifier-active);
 						}
-						
+
 						/* if only 1 tab */
 						.channelTabs-tabContainer[data-tab-count="1"] .channelTabs-tabNav>.channelTabs-tabNavClose {
 							color: var(--interactive-muted);
 							background: none;
 						}
-						
+
 						.channelTabs-tabNav>div {
 							display: flex;
 							align-items: center;
@@ -2739,10 +2755,10 @@ module.exports = (() => {
 							color: var(--interactive-normal);
 						}
 					`;
-		
+
 					const BaseStyle = `
 
-					/* 
+					/*
 					//#region Tab Base/Container
 					*/
 
@@ -2784,7 +2800,7 @@ module.exports = (() => {
 						padding: 4px 8px 1px 8px;
 						background: none;
 					}
-					
+
 					.channelTabs-tabContainer {
 						display: flex;
 						align-items: center;
@@ -2807,13 +2823,13 @@ module.exports = (() => {
 						flex: 1 1 var(--channelTabs-tabWidthMin);
 						margin-bottom: 3px;
 					}
-					
+
 					.channelTabs-tab>div:first-child {
 						display: flex;
 						width: calc(100% - 16px);
 						align-items: center;
 					}
-					
+
 					.channelTabs-tab:not(.channelTabs-selected):hover {
 						background: var(--background-modifier-hover);
 					}
@@ -2821,7 +2837,7 @@ module.exports = (() => {
 					.channelTabs-tab:not(.channelTabs-selected):active {
 						background: var(--background-modifier-active);
 					}
-					
+
 					.channelTabs-tab.channelTabs-selected {
 						background: var(--background-modifier-selected);
 					}
@@ -2843,7 +2859,7 @@ module.exports = (() => {
 					/*
 					//#region Quick Settings
 					*/
-					
+
 					html:not(.platform-win) #channelTabs-settingsMenu {
 						margin-right: 0;
 					}
@@ -2859,7 +2875,7 @@ module.exports = (() => {
 					#channelTabs-settingsMenu:hover {
 						background: var(--background-modifier-hover);
 					}
-					
+
 					.channelTabs-settingsIcon {
 						max-width: 40px;
 						position: absolute;
@@ -2890,7 +2906,7 @@ module.exports = (() => {
 					.channelTabs-tab:not(.channelTabs-selected):hover .channelTabs-tabName {
 						color: var(--interactive-hover);
 					}
-					
+
 					.channelTabs-tab:not(.channelTabs-selected):active .channelTabs-tabName,
 					.channelTabs-tab.channelTabs-selected .channelTabs-tabName {
 						color: var(--interactive-active);
@@ -2959,7 +2975,7 @@ module.exports = (() => {
 						width: 100%;
 						transform: scale(0.85);
 					}
-					
+
 					.channelTabs-newTab {
 						display:flex;
 						align-items: center;
@@ -2972,12 +2988,12 @@ module.exports = (() => {
 						cursor: pointer;
 						color: var(--interactive-normal);
 					}
-					
+
 					.channelTabs-newTab:hover {
 						background: var(--background-modifier-hover);
 						color: var(--interactive-hover);
 					}
-					
+
 					.channelTabs-newTab:active {
 						background: var(--background-modifier-active);
 						color: var(--interactive-active);
@@ -3014,7 +3030,7 @@ module.exports = (() => {
 						text-align: center;
 						color: #fff;
 					}
-				
+
 					.channelTabs-typingBadge {
 						border-radius: 8px;
 						padding-left: 4px;
@@ -3077,7 +3093,7 @@ module.exports = (() => {
 						margin-left: 2px;
 						margin-right: 6px;
 					}
-				
+
 					.channelTabs-fav .channelTabs-noMention,
 					.channelTabs-fav .channelTabs-noUnread {
 						background-color: var(--background-primary);
@@ -3086,7 +3102,7 @@ module.exports = (() => {
 					.channelTabs-fav .channelTabs-noTyping {
 						display: none;
 					}
-					
+
 					.channelTabs-fav .channelTabs-favName + div {
 						margin-left: 6px;
 					}
@@ -3175,7 +3191,7 @@ module.exports = (() => {
 					.channelTabs-fav:active .channelTabs-favName {
 						color: var(--interactive-active);
 					}
-					
+
 					.channelTabs-noFavNotice {
 						color: var(--text-muted);
 						font-size: 14px;
@@ -3183,7 +3199,7 @@ module.exports = (() => {
 					}
 
 					/*
-					//#endregion 
+					//#endregion
 					*/
 
 					/*
@@ -3206,7 +3222,7 @@ module.exports = (() => {
 						text-overflow: ellipsis;
 						margin-bottom: 3px;
 					}
-					
+
 					.channelTabs-favGroupBtn>:first-child {
 						margin-left: 6px;
 					}
@@ -3214,7 +3230,7 @@ module.exports = (() => {
 					.channelTabs-favGroup:hover .channelTabs-favGroupBtn {
 						background: var(--background-modifier-hover);
 					}
-		
+
 					.channelTabs-favGroup-content {
 						z-index: 1001;
 						display: none;
@@ -3226,7 +3242,7 @@ module.exports = (() => {
 						border-radius: 4px;
 						padding: 4px;
 					}
-					
+
 					.channelTabs-favGroup-content>:last-child {
 						margin-bottom: 0;
 					}
@@ -3243,7 +3259,7 @@ module.exports = (() => {
 						background: var(--slider-background-normal);
 						border-radius: var(--slider-background-radius);
 					}
-					
+
 					.channelTabs-slider {
 						position: relative;
 						top: -14px;
@@ -3253,7 +3269,7 @@ module.exports = (() => {
 						--channelTabs-tabWidth: fit-content;
 						--channelTabs-tabWidthMin: fit-content;
 					}
-					
+
 					.channelTabs-tab.channelTabs-minimized>div>:first-child~*,
 					.channelTabs-fav.channelTabs-minimized>svg:first-child~*,
 					.channelTabs-tab.channelTabs-minimized>.channelTabs-closeTab {
@@ -3312,9 +3328,9 @@ module.exports = (() => {
 				}
 
 				//#endregion
-				
+
 				//#region Patches
-				
+
 				async patchAppView(promiseState)
 				{
 					const AppView = await ReactComponents.getComponent("Shakeable", ".app-2CXKsg");
@@ -3366,7 +3382,7 @@ module.exports = (() => {
 					forceUpdate();
 					patches.push(()=>forceUpdate());
 				}
-				
+
 				patchContextMenus()
 				{
 					patches.push(
@@ -3397,7 +3413,7 @@ module.exports = (() => {
 				}
 
 				//#endregion
-				
+
 				//#region Handlers
 
 				clickHandler(e)
@@ -3406,7 +3422,7 @@ module.exports = (() => {
 						closeAllDropdowns();
 					}
 				}
-				
+
 				keybindHandler(e)
 				{
 					const keybinds = [
@@ -3467,7 +3483,7 @@ module.exports = (() => {
 				}
 
 				//#endregion
-				
+
 				//#region Hotkey Functions
 
 				nextTab(){
@@ -3485,7 +3501,7 @@ module.exports = (() => {
 				//#endregion
 
 				//#region Settings
-				
+
 				get defaultVariables(){
 					return {
 						tabs: [],
@@ -3523,24 +3539,24 @@ module.exports = (() => {
 
 				getSettingsPath(useOldLocation)
 				{
-					if (useOldLocation === true) 
+					if (useOldLocation === true)
 					{
 						return this.getName();
 					}
-					else 
+					else
 					{
 						const user_id = UserStore.getCurrentUser()?.id;
 						return this.getName() + "_new" + (user_id != null ? "_" + user_id : "");
 					}
 				}
-				
+
 				loadSettings()
-				{					
+				{
 					if (Object.keys(PluginUtilities.loadSettings(this.getSettingsPath())).length === 0)
 					{
 						this.settings = PluginUtilities.loadSettings(this.getSettingsPath(true), this.defaultVariables);
 					}
-					else 
+					else
 					{
 						this.settings = PluginUtilities.loadSettings(this.getSettingsPath(), this.defaultVariables);
 					}
@@ -3566,7 +3582,7 @@ module.exports = (() => {
 					}
 					PluginUtilities.saveSettings(this.getSettingsPath(), this.settings);
 				}
-				
+
 				getSettingsPanel(){
 					const panel = document.createElement("div");
 					panel.className = "form";
@@ -3639,11 +3655,11 @@ module.exports = (() => {
 							this.applyStyle();
 							this.saveSettings();
 						}))
-						.append(new Settings.Slider("Minimum Tab Width", "Set the limit on how small a tab can be before overflowing to a new row", 
+						.append(new Settings.Slider("Minimum Tab Width", "Set the limit on how small a tab can be before overflowing to a new row",
 							58, 220,
 							this.settings.tabWidthMin,
 							value => (
-								this.settings.tabWidthMin = Math.round(value), 
+								this.settings.tabWidthMin = Math.round(value),
 								this.saveSettings(),
 								document.documentElement.style.setProperty("--channelTabs-tabWidthMin", this.settings.tabWidthMin + "px")
 							),
@@ -3666,7 +3682,7 @@ module.exports = (() => {
 							});
 							this.saveSettings();
 						}))
-						
+
 						.append(new Settings.Switch("Primary Forward/Back Navigation", "Instead of scrolling down the row, use the previous and next buttons to navigate between pages", this.settings.useStandardNav, checked=>{
 							this.settings.useStandardNav = checked;
 							if(TopBarRef.current) TopBarRef.current.setState({
@@ -3713,7 +3729,7 @@ module.exports = (() => {
 								this.saveSettings();
 							}));
 
-						
+
 
 					//#endregion
 
@@ -3791,7 +3807,7 @@ module.exports = (() => {
 							this.saveSettings();
 						}));
 
-					
+
 
 					//#endregion
 
@@ -3832,13 +3848,13 @@ module.exports = (() => {
 						}));
 
 					//#endregion
-				
+
 
 					return panel;
 				}
 
 
-				//#endregion 			
+				//#endregion
 			}
 
 			//#endregion
