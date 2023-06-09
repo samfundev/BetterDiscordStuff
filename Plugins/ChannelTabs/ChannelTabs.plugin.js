@@ -2104,6 +2104,7 @@ module.exports = (() => {
 					this.renameFav = this.renameFav.bind(this);
 					this.deleteFav = this.deleteFav.bind(this);
 					this.addToFavs = this.addToFavs.bind(this);
+					this.refreshGuildIcons = this.refreshGuildIcons.bind(this);
 					this.minimizeTab = this.minimizeTab.bind(this);
 					this.minimizeFav = this.minimizeFav.bind(this);
 					this.moveTab = this.moveTab.bind(this);
@@ -2118,6 +2119,10 @@ module.exports = (() => {
 					this.openFavInNewTab = this.openFavInNewTab.bind(this);
 					this.openFavGroupInNewTab = this.openFavGroupInNewTab.bind(this);
 					this.hideFavBar = this.hideFavBar.bind(this);
+				}
+
+				componentDidMount(){
+					this.refreshGuildIcons()
 				}
 
 				//#endregion
@@ -2272,6 +2277,17 @@ module.exports = (() => {
 					var groupId = -1;
 					this.setState({
 						favs: [...this.state.favs, {name, iconUrl, url, channelId, guildId, groupId}]
+					}, this.props.plugin.saveSettings);
+				}
+
+				refreshGuildIcons(){
+					this.setState({
+						favs: this.state.favs.map( fav => {
+							return {
+								...fav,
+								iconUrl: getCurrentIconUrl( fav.url ),
+							}
+						})
 					}, this.props.plugin.saveSettings);
 				}
 
