@@ -2090,6 +2090,13 @@ module.exports = (() => {
 					this.openFavInNewTab = this.openFavInNewTab.bind(this);
 					this.openFavGroupInNewTab = this.openFavGroupInNewTab.bind(this);
 					this.hideFavBar = this.hideFavBar.bind(this);
+
+					document.addEventListener('keydown', (event) => {
+						if ((event.key === 't' || event.key === 'T') && (event.ctrlKey || event.metaKey)) {
+							this.openNewTab();
+							event.preventDefault();
+						}
+					});
 				}
 
 				//#endregion
