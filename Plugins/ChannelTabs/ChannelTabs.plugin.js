@@ -98,7 +98,7 @@ module.exports = (() => {
 			//#region Module/Variable Definitions
 
 			const { PluginUtilities, DiscordModules, ReactComponents, ReactTools, Settings, Modals } = Api;
-			const { React, NavigationUtils, SelectedChannelStore, SelectedGuildStore, ChannelStore, GuildStore, UserStore, UserTypingStore, Permissions } = DiscordModules;
+			const { React, NavigationUtils, SelectedChannelStore, SelectedGuildStore, ChannelStore, GuildStore, UserStore, UserTypingStore, Permissions, RelationshipStore } = DiscordModules;
 			const { ContextMenu, Patcher, Webpack } = new BdApi("ChannelTabs");
 
 			function getModule(filter, options = {}) {
@@ -259,11 +259,11 @@ module.exports = (() => {
 							items: instance.mergeItems(
 								[{
 									label: "Open in new tab",
-									action: ()=>TopBarRef.current && TopBarRef.current.saveChannel(props.channel.guild_id, props.channel.id, "@" + (props.channel.name || props.user.username), props.user.getAvatarURL(null, 40, false))
+									action: ()=>TopBarRef.current && TopBarRef.current.saveChannel(props.channel.guild_id, props.channel.id, "@" + (props.channel.name || RelationshipStore.getNickname(props.user.id) || props.user.username), props.user.getAvatarURL(null, 40, false))
 								}],
 								[{
 									label: "Save DM as bookmark",
-									action: ()=>TopBarRef.current && TopBarRef.current.addToFavs("@" + (props.channel.name || props.user.username), props.user.getAvatarURL(null, 40, false), `/channels/@me/${props.channel.id}`, props.channel.id)
+									action: ()=>TopBarRef.current && TopBarRef.current.addToFavs("@" + (props.channel.name || RelationshipStore.getNickname(props.user.id) || props.user.username), props.user.getAvatarURL(null, 40, false), `/channels/@me/${props.channel.id}`, props.channel.id)
 								}]
 							)
 						}
@@ -1281,7 +1281,7 @@ module.exports = (() => {
 				if(cId){
 					const channel = ChannelStore.getChannel(cId);
 					if(channel?.name) return (channel.guildId ? "@" : "#") + channel.name;
-					else if(channel?.rawRecipients) return "@" + channel.rawRecipients.map(u=>u.username).join(", ");
+					else if(channel?.rawRecipients) return "@" + channel.rawRecipients.map(u=>RelationshipStore.getNickname(u.id) || u.username).join(", ");
 					else return pathname;
 				}else{
 					if(pathname === "/channels/@me") return "Friends";
