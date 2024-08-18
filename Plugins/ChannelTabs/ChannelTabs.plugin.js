@@ -2772,6 +2772,29 @@ module.exports = (() => {
 						overflow: hidden;
 					}
 
+					/* Apply draggable to both containers only on macOS using .platform-osx */
+					.platform-osx .channelTabs-tabContainer, 
+					.platform-osx .channelTabs-favContainer {
+					    -webkit-app-region: drag;
+					}
+					
+					/* Exclude all interactive elements from being draggable in both containers only on macOS using .platform-osx */
+					.platform-osx .channelTabs-tabContainer *, 
+					.platform-osx .channelTabs-favContainer * {
+					    -webkit-app-region: no-drag;
+					}
+					
+					/* Apply padding-left to the first element following #channelTabs-settingsMenu if it exists, only on macOS using .platform-osx */
+					.platform-osx #channelTabs-settingsMenu + .channelTabs-tabContainer,
+					.platform-osx #channelTabs-settingsMenu + .channelTabs-favContainer {
+					    padding-left: 72px;
+					}
+					
+					/* Default padding for the first child of #channelTabs-container if #channelTabs-settingsMenu is not present, only on macOS using .platform-osx */
+					.platform-osx #channelTabs-container > :first-child:not(#channelTabs-settingsMenu) {
+					    padding-left: 72px;
+					}
+
 					/*
 					//#endregion
 					*/
