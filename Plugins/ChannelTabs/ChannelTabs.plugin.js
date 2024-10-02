@@ -3564,8 +3564,8 @@ module.exports = (() => {
 					this.saveSettings();
 				}
 
-				saveSettings(){
-					if(TopBarRef.current){
+				saveSettings() {
+					if (TopBarRef.current) {
 						this.settings.tabs = TopBarRef.current.state.tabs;
 						this.settings.favs = TopBarRef.current.state.favs;
 						this.settings.favGroups = TopBarRef.current.state.favGroups;
@@ -3578,21 +3578,31 @@ module.exports = (() => {
 						} catch {
 							return false;
 						}
-					};
+					}
 					
-					// Check if the settings file is corrupted and overwrite it with settings
-					const path = join(Plugins.folder, this.getSettingsPath() + ".config.json");
-    
-					try {1
-						if (!existsSync(path)) {
-							writeFileSync(path, JSON.stringify(this.settings, null, 4));
-						} else if (!isJSON(readFileSync(path))) {
-							writeFileSync(path, JSON.stringify(this.settings, null, 4));
+					const fs = require('fs');
+					const path = require('path');
+					const settingsPath = path.join(Plugins.folder, this.getSettingsPath() + ".config.json");
+					
+					try {
+						if (!fs.existsSync(settingsPath)) {
+							fs.writeFileSync(settingsPath, JSON.stringify(this.settings, null, 4));
 						} else {
-							Utilities.saveSettings(this.getSettingsPath(), this.settings);
+							const currentSettings = fs.readFileSync(settingsPath, 'utf8');
+							if (!isJSON(currentSettings)) {
+								fs.writeFileSync(settingsPath, JSON.stringify(this.settings, null, 4));
+							} else {
+								Utilities.saveSettings(this.getSettingsPath(), this.settings);
+							}
 						}
 					} catch (error) {
 						console.error("Error saving settings:", error);
+						// Fallback to using Utilities.saveSettings if file operations fail
+						try {
+							Utilities.saveSettings(this.getSettingsPath(), this.settings);
+						} catch (fallbackError) {
+							console.error("Fallback save failed:", fallbackError);
+						}
 					}
 				}
 				
