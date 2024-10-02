@@ -1293,26 +1293,35 @@ module.exports = (() => {
 				}
 			};	
 
-			const getCurrentIconUrl = (pathname = location.pathname)=>
-			{
-				const cId = (pathname.match(/^\/channels\/(\d+|@me|@favorites)\/(\d+)/) || [])[2];
-				if(cId){
+			const getCurrentIconUrl = (pathname = location.pathname) => {
+				try {
+					const cId = (pathname.match(/^\/channels\/(\d+|@me|@favorites)\/(\d+)/) || [])[2];
+					if (!cId) return DefaultUserIconGrey;
+			
+					if (!ChannelStore || !ChannelStore.getChannel) return DefaultUserIconGrey;
 					const channel = ChannelStore.getChannel(cId);
-					if(!channel) return "";
-					if(channel.guild_id){
+					if (!channel) return DefaultUserIconGrey;
+			
+					if (channel.guild_id) {
+						if (!GuildStore || !GuildStore.getGuild) return DefaultUserIconGrey;
 						const guild = GuildStore.getGuild(channel.guild_id);
+						if (!guild || !guild.getIconURL) return DefaultUserIconGrey;
 						return guild.getIconURL(40, false) || DefaultUserIconBlue;
-					}else if(channel.isDM()){
+					} else if (channel.isDM && channel.isDM()) {
+						if (!UserStore || !UserStore.getUser) return DefaultUserIconGrey;
 						const user = UserStore.getUser(channel.getRecipientId());
+						if (!user || !user.getAvatarURL) return DefaultUserIconGrey;
 						return user.getAvatarURL(null, 40, false);
-					}else if(channel.isGroupDM()){
-						if(channel.icon) return `https://cdn.discordapp.com/channel-icons/${channel.id}/${channel.icon}.webp`;
+					} else if (channel.isGroupDM && channel.isGroupDM()) {
+						if (channel.icon) return `https://cdn.discordapp.com/channel-icons/${channel.id}/${channel.icon}.webp`;
 						else return DefaultUserIconGreen;
 					}
+				} catch (error) {
+					console.error('Error in getCurrentIconUrl:', error);
+					return DefaultUserIconGrey;
 				}
 				return DefaultUserIconGrey;
 			};
-
 			//#endregion
 			
 			//#region Tab Definitions
@@ -3573,10 +3582,17 @@ module.exports = (() => {
 					
 					// Check if the settings file is corrupted and overwrite it with settings
 					const path = join(Plugins.folder, this.getSettingsPath() + ".config.json");
-					if (!isJSON(readFileSync(path))) {
-						writeFileSync(path, JSON.stringify(this.settings, null, 4));
-					} else {
-						Utilities.saveSettings(this.getSettingsPath(), this.settings);
+    
+					try {1
+						if (!existsSync(path)) {
+							writeFileSync(path, JSON.stringify(this.settings, null, 4));
+						} else if (!isJSON(readFileSync(path))) {
+							writeFileSync(path, JSON.stringify(this.settings, null, 4));
+						} else {
+							Utilities.saveSettings(this.getSettingsPath(), this.settings);
+						}
+					} catch (error) {
+						console.error("Error saving settings:", error);
 					}
 				}
 				
