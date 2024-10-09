@@ -100,8 +100,9 @@ module.exports = (() => {
 			//#region Module/Variable Definitions
 
 			const { PluginUtilities, Utilities, DiscordModules, ReactComponents, ReactTools, Settings, Modals } = Api;
-			const { React, NavigationUtils, SelectedChannelStore, SelectedGuildStore, ChannelStore, GuildStore, UserStore, UserTypingStore, Permissions, RelationshipStore } = DiscordModules;
+			const { React, NavigationUtils, SelectedChannelStore, SelectedGuildStore, ChannelStore, UserStore, UserTypingStore, Permissions, RelationshipStore } = DiscordModules;
 			const { ContextMenu, Patcher, Webpack, Plugins } = new BdApi("ChannelTabs");
+			const GuildStore = Webpack.getStore("GuildStore");
 			const { writeFileSync, readFileSync, existsSync } = require("fs");
 			const { join } = require("path");
 
