@@ -263,11 +263,11 @@ module.exports = (() => {
 							items: instance.mergeItems(
 								[{
 									label: "Open in new tab",
-									action: ()=>TopBarRef.current && TopBarRef.current.saveChannel(props.channel.guild_id, props.channel.id, "@" + (props.channel.name || RelationshipStore.getNickname(props.user.id) || props.user.username), props.user.getAvatarURL(null, 40, false))
+									action: ()=>TopBarRef.current && TopBarRef.current.saveChannel(props.channel.guild_id, props.channel.id, (props.channel.name || RelationshipStore.getNickname(props.user.id) || props.user.globalName), props.user.getAvatarURL(null, 40, false))
 								}],
 								[{
 									label: "Save DM as bookmark",
-									action: ()=>TopBarRef.current && TopBarRef.current.addToFavs("@" + (props.channel.name || RelationshipStore.getNickname(props.user.id) || props.user.username), props.user.getAvatarURL(null, 40, false), `/channels/@me/${props.channel.id}`, props.channel.id)
+									action: ()=>TopBarRef.current && TopBarRef.current.addToFavs((props.channel.name || RelationshipStore.getNickname(props.user.id) || props.user.globalName), props.user.getAvatarURL(null, 40, false), `/channels/@me/${props.channel.id}`, props.channel.id)
 								}]
 							)
 						}
@@ -286,11 +286,11 @@ module.exports = (() => {
 							items: instance.mergeItems(
 								[{
 									label: "Open in new tab",
-									action: ()=>TopBarRef.current && TopBarRef.current.saveChannel(props.channel.guild_id, props.channel.id, "@" + (props.channel.name || props.channel.rawRecipients.map(u=>u.username).join(", ")), ""/*TODO*/)
+									action: ()=>TopBarRef.current && TopBarRef.current.saveChannel(props.channel.guild_id, props.channel.id, (props.channel.name || props.channel.rawRecipients.map(u=>RelationshipStore.getNickname(u.id) || u.globalName).join(", ")), ""/*TODO*/)
 								}],
 								[{
 									label: "Save bookmark",
-									action: ()=>TopBarRef.current && TopBarRef.current.addToFavs("@" + (props.channel.name || props.channel.rawRecipients.map(u=>u.username).join(", ")), ""/*TODO*/, `/channels/@me/${props.channel.id}`, props.channel.id)
+									action: ()=>TopBarRef.current && TopBarRef.current.addToFavs((props.channel.name || props.channel.rawRecipients.map(u=>RelationshipStore.getNickname(u.id) || u.globalName).join(", ")), ""/*TODO*/, `/channels/@me/${props.channel.id}`, props.channel.id)
 								}]
 							)
 						}
@@ -1285,7 +1285,7 @@ module.exports = (() => {
 				if(cId){
 					const channel = ChannelStore.getChannel(cId);
 					if(channel?.name) return (channel.guildId ? "@" : "#") + channel.name;
-					else if(channel?.rawRecipients) return "@" + channel.rawRecipients.map(u=>RelationshipStore.getNickname(u.id) || u.username).join(", ");
+					else if(channel?.rawRecipients) return channel.rawRecipients.map(u=>RelationshipStore.getNickname(u.id) || u.globalName).join(", ");
 					else return pathname;
 				}else{
 					if(pathname === "/channels/@me") return "Friends";
