@@ -2631,7 +2631,7 @@ module.exports = (() => {
 						:root {	
 							--channelTabs-tabHeight: 22px;
 							--channelTabs-favHeight: 22px;
-							--channelTabs-tabNameFontSize: 16px;
+							--channelTabs-tabNameFontSize: 12px;
 							--channelTabs-openTabSize: 18px;
 						}
 					`;
