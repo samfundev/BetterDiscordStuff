@@ -2631,7 +2631,7 @@ module.exports = (() => {
 						:root {	
 							--channelTabs-tabHeight: 22px;
 							--channelTabs-favHeight: 22px;
-							--channelTabs-tabNameFontSize: 12px;
+							--channelTabs-tabNameFontSize: 16px;
 							--channelTabs-openTabSize: 18px;
 						}
 					`;
@@ -3582,6 +3582,32 @@ module.exports = (() => {
 						return this.getName() + "_new" + (user_id != null ? "_" + user_id : "");
 					}
 				}
+
+				updateFavIcon(fav) {
+					const updatedFav = fav
+					const iconUrl = fav.iconUrl.split('/')
+					const { url } = fav
+					const isDm = url.includes("@me")
+
+					if (isDm) {
+						const userId = iconUrl[4]
+						const user = UserStore.getUser(userId)
+						const newIconHash = user.avatar
+						iconUrl[5] = newIconHash + ".webp?size=56"
+						const newIconUrl = iconUrl.join("/")
+						updatedFav.iconUrl = newIconUrl
+					} else {
+						const splitUrl = url.split("/")
+
+						const guildId = splitUrl[2] 
+						const newIconHash = GuildStore.getGuild(guildId).icon 
+						iconUrl[5] = newIconHash + ".webp?"
+						const newIconUrl = iconUrl.join("/")
+						updatedFav.iconUrl = newIconUrl
+					}
+
+					return updatedFav
+				}
 				
 				loadSettings()
 				{					
@@ -3594,15 +3620,16 @@ module.exports = (() => {
 						this.settings = Utilities.loadSettings(this.getSettingsPath(), this.defaultVariables);
 					}
 					this.settings.favs = this.settings.favs.map(fav => {
-						if(fav.channelId === undefined){
-							const match = fav.url.match(/^\/channels\/[^\/]+\/(\d+)$/);
-							if(match) return Object.assign(fav, {channelId: match[1]});
+						const fav2 = this.updateFavIcon(fav);
+						if(fav2.channelId === undefined){
+							const match = fav2.url.match(/^\/channels\/[^\/]+\/(\d+)$/);
+							if(match) return Object.assign(fav2, {channelId: match[1]});
 						}
-						if (fav.groupId === undefined)
+						if (fav2.groupId === undefined)
 						{
-							return Object.assign(fav, {groupId: -1});
+							return Object.assign(fav2, {groupId: -1});
 						}
-						return fav;
+						return fav2;
 					});
 					this.saveSettings();
 				}
