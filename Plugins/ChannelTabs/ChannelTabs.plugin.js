@@ -3586,14 +3586,26 @@ module.exports = (() => {
 				updateFavIcon(fav) {
 					const updatedFav = fav
 					const iconUrl = fav.iconUrl.split('/')
-					const { url } = fav
+					const { channelId, url } = fav
 					const isDm = url.includes("@me")
 
 					
 					if (isDm) {
-						const userId = iconUrl[4] // get this differently
-						const user = UserStore.getUser(userId)
-						const newIconHash = user.avatar
+						const channel = ChannelStore.getChannel(channelId)
+						const { icon, recipients } = channel
+						let userId = ""
+						let newIconHash = ""
+						let urlStub = "icons"
+
+						if (recipients.length > 1) {
+							userId = channelId
+							newIconHash = icon
+							urlStub = "channel-icons"
+						} else {
+							userId = recipients[0]
+							const user = UserStore.getUser(userId)
+							newIconHash = user.avatar
+						}
 
 						if (newIconHash === null) {
 							updatedFav.iconUrl = ""
@@ -3601,7 +3613,7 @@ module.exports = (() => {
 						}
 
 						if (fav.iconUrl === "") {
-							updatedFav.iconUrl = "https://cdn.discordapp.com/icons/" + userId + "/" + newIconHash + ".webp?size=56"
+							updatedFav.iconUrl = "https://cdn.discordapp.com/" + urlStub + "/" + userId + "/" + newIconHash + ".webp?size=56"
 						} else {
 							iconUrl[5] = newIconHash + ".webp?size=56"
 							const newIconUrl = iconUrl.join("/")
