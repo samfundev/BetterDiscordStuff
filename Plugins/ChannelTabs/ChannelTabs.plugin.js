@@ -3589,21 +3589,42 @@ module.exports = (() => {
 					const { url } = fav
 					const isDm = url.includes("@me")
 
+					
 					if (isDm) {
-						const userId = iconUrl[4]
+						const userId = iconUrl[4] // get this differently
 						const user = UserStore.getUser(userId)
 						const newIconHash = user.avatar
-						iconUrl[5] = newIconHash + ".webp?size=56"
-						const newIconUrl = iconUrl.join("/")
-						updatedFav.iconUrl = newIconUrl
+
+						if (newIconHash === null) {
+							updatedFav.iconUrl = ""
+							return updatedFav
+						}
+
+						if (fav.iconUrl === "") {
+							updatedFav.iconUrl = "https://cdn.discordapp.com/icons/" + userId + "/" + newIconHash + ".webp?size=56"
+						} else {
+							iconUrl[5] = newIconHash + ".webp?size=56"
+							const newIconUrl = iconUrl.join("/")
+							updatedFav.iconUrl = newIconUrl
+						}
 					} else {
 						const splitUrl = url.split("/")
 
 						const guildId = splitUrl[2] 
-						const newIconHash = GuildStore.getGuild(guildId).icon 
-						iconUrl[5] = newIconHash + ".webp?"
-						const newIconUrl = iconUrl.join("/")
-						updatedFav.iconUrl = newIconUrl
+						const newIconHash = GuildStore.getGuild(guildId).icon
+
+						if (newIconHash === null) {
+							updatedFav.iconUrl = ""
+							return updatedFav
+						}
+
+						if (fav.iconUrl === "") {
+							updatedFav.iconUrl = "https://cdn.discordapp.com/icons/" + guildId + "/" + newIconHash + ".webp?"
+						} else {
+							iconUrl[5] = newIconHash + ".webp?"
+							const newIconUrl = iconUrl.join("/")
+							updatedFav.iconUrl = newIconUrl
+						}
 					}
 
 					return updatedFav
