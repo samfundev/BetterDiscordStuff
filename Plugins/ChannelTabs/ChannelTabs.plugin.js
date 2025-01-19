@@ -4,7 +4,7 @@
 * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/Plugins/ChannelTabs/ChannelTabs.plugin.js
 * @donate https://paypal.me/samfun123
 * @authorId 76052829285916672
-* @version 2.6.15
+* @version 2.6.16
 */
 /*@cc_on
 @if (@_jscript)
@@ -3427,7 +3427,7 @@ module.exports = (() => {
 						ContextMenu.patch("user-context", (returnValue, props) => {
 							if(!this.settings.showTabBar && !this.settings.showFavBar) return;
 							if(!returnValue) return;
-							if (!props.channel || props.channel.recipients.length !== 1 || props.channel.recipients[0] !== props.user.id) return;
+							if (!props.channel || props.channel.recipients?.length !== 1 || props.channel.recipients[0] !== props.user.id) return;
 							returnValue.props.children.push(CreateDMContextMenuChildren(this, props));
 						}),
 
