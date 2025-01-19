@@ -4,7 +4,7 @@
 * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/Plugins/ChannelTabs/ChannelTabs.plugin.js
 * @donate https://paypal.me/samfun123
 * @authorId 76052829285916672
-* @version 2.6.16
+* @version 2.6.15
 */
 /*@cc_on
 @if (@_jscript)
