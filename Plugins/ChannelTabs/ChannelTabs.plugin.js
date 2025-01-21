@@ -1293,18 +1293,17 @@ module.exports = (() => {
 				return (()=>{const c=ChannelStore.getChannel(channel_id); return c && (c.isDM()||c.isGroupDM());})()
 			};
 
-			const getCurrentName = (pathname = location.pathname)=>
-			{
+			const getCurrentName = (pathname = location.pathname) => {
 				const cId = (pathname.match(/^\/channels\/(\d+|@me|@favorites)\/(\d+)/) || [])[2];
-				if(cId){
-					const channel = ChannelStore.getChannel(cId);
-					if(channel?.name) return (channel.guildId ? "@" : "#") + channel.name;
-					else if(channel?.rawRecipients) return channel.rawRecipients.map(u=>RelationshipStore.getNickname(u.id) || u.globalName).join(", ");
-					else return pathname;
-				}else{
-					if(pathname === "/channels/@me") return "Friends";
-					else if(pathname.match(/^\/[a-z\-]+$/)) return pathname.substr(1).split("-").map(part => part.substr(0, 1).toUpperCase() + part.substr(1)).join(" ");
-					else return pathname;
+				if (cId) {
+				  const channel = ChannelStore.getChannel(cId);
+				  if (channel?.name) return (channel.guildId ? '@' : '#') + channel.name;
+				  else if (channel?.rawRecipients) return (channel.rawRecipients.map((u) =>  (!u.display_name && !u.global_name && u.bot) ? `BOT (@${u.username})` : (RelationshipStore.getNickname(u.id) || u.display_name) ).join(', ') || `${channel.rawRecipients[0].display_name} (@${channel.rawRecipients[0].username})` );
+				  else return pathname;
+				} else {
+				  if (pathname === '/channels/@me') return 'Friends';
+				  else if (pathname.match(/^\/[a-z\-]+$/)) return pathname.substr(1).split('-').map((part) => part.substr(0, 1).toUpperCase() + part.substr(1)).join(' ');
+				  else return pathname;
 				}
 			};	
 
