@@ -1648,10 +1648,7 @@ var getCurrentName = (pathname = location.pathname) => {
 		const guild = GuildStore.getGuild(gId);
 		if (channel?.name) return (channel.guildId ? "@" : "#") + channel.name;
 		else if (guild?.name) return guild.name;
-		else if (channel?.rawRecipients)
-			return channel.rawRecipients
-				.map((u) => RelationshipStore.getNickname(u.id) || u.globalName)
-				.join(", ");
+		else if (channel?.rawRecipients) return (channel.rawRecipients.map((u) =>  (!u.display_name && !u.global_name && u.bot) ? `BOT (@${u.username})` : (RelationshipStore.getNickname(u.id) || u.display_name) ).join(', ') || `${channel.rawRecipients[0].display_name} (@${channel.rawRecipients[0].username})` );
 		else return pathname;
 	} else {
 		if (pathname === "/channels/@me") return "Friends";
