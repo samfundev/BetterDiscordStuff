@@ -1818,7 +1818,6 @@ var CozyTab = (props) => {
 							y: 0,
 							width: 20,
 							height: 20,
-							mask: "url(#svg-mask-avatar-status-round-20)",
 						},
 						/* @__PURE__ */ React.createElement(TabIcon, {
 							iconUrl: props.iconUrl,
@@ -1918,7 +1917,6 @@ var CompactTab = (props) => {
 							y: 0,
 							width: 20,
 							height: 20,
-							mask: "url(#svg-mask-avatar-status-round-20)",
 						},
 						/* @__PURE__ */ React.createElement(TabIcon, {
 							iconUrl: props.iconUrl,
@@ -2246,7 +2244,6 @@ var Fav = (props) =>
 							y: 0,
 							width: 20,
 							height: 20,
-							mask: "url(#svg-mask-avatar-status-round-20)",
 						},
 						/* @__PURE__ */ React.createElement(FavIcon, {
 							iconUrl: props.iconUrl,
