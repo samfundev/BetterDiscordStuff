@@ -1671,7 +1671,7 @@ var getCurrentIconUrl = (pathname = location.pathname) => {
 		if (!ChannelStore || !ChannelStore.getChannel) return DefaultUserIconGrey;
 		const channel = ChannelStore.getChannel(cId);
 		if (!channel && !gId) return DefaultUserIconGrey;
-		if (channel?.guild_id || gId) {
+		if (channel?.guild_id || gId && gId !== '@me' && gId !== '@favorites') {
 			if (!GuildStore || !GuildStore.getGuild) return DefaultUserIconGrey;
 			const guild = GuildStore.getGuild(channel?.guild_id || gId);
 			if (!guild || !guild.getIconURL) return DefaultUserIconGrey;
