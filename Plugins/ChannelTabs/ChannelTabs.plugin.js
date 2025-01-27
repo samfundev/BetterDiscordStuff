@@ -1642,11 +1642,12 @@ var isChannelDM = (channel_id) => {
 	})();
 };
 var getCurrentName = (pathname = location.pathname) => {
-	const cId = (pathname.match(/^\/channels\/(\d+|@me|@favorites)\/(\d+)/) ||
-		[])[2];
+	const [ _, gId, cId ] = (pathname.match(/^\/channels\/(\d+|@me|@favorites)\/\b(\d+|\w+(-\w+)*)\b/) || []);
 	if (cId) {
 		const channel = ChannelStore.getChannel(cId);
+		const guild = GuildStore.getGuild(gId);
 		if (channel?.name) return (channel.guildId ? "@" : "#") + channel.name;
+		else if (guild?.name) return guild.name;
 		else if (channel?.rawRecipients)
 			return channel.rawRecipients
 				.map((u) => RelationshipStore.getNickname(u.id) || u.globalName)
@@ -1665,15 +1666,14 @@ var getCurrentName = (pathname = location.pathname) => {
 };
 var getCurrentIconUrl = (pathname = location.pathname) => {
 	try {
-		const cId = (pathname.match(/^\/channels\/(\d+|@me|@favorites)\/(\d+)/) ||
-			[])[2];
+		const [ _, gId, cId ] = (pathname.match(/^\/channels\/(\d+|@me|@favorites)\/\b(\d+|\w+(-\w+)*)\b/) || []);
 		if (!cId) return DefaultUserIconGrey;
 		if (!ChannelStore || !ChannelStore.getChannel) return DefaultUserIconGrey;
 		const channel = ChannelStore.getChannel(cId);
-		if (!channel) return DefaultUserIconGrey;
-		if (channel.guild_id) {
+		if (!channel && !gId) return DefaultUserIconGrey;
+		if (channel?.guild_id || gId) {
 			if (!GuildStore || !GuildStore.getGuild) return DefaultUserIconGrey;
-			const guild = GuildStore.getGuild(channel.guild_id);
+			const guild = GuildStore.getGuild(channel?.guild_id || gId);
 			if (!guild || !guild.getIconURL) return DefaultUserIconGrey;
 			return guild.getIconURL(40, false) || DefaultUserIconBlue;
 		} else if (channel.isDM && channel.isDM()) {
