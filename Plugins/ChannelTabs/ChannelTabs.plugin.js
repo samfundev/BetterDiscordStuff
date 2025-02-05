@@ -4098,7 +4098,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 				);
 			}),
 			ContextMenu.patch("guild-context", (returnValue, props) => {
-				if (!this.settings.showTabBar && !this.settings.showFavBar) return;
+				if (!this.settings.showTabBar && !this.settings.showFavBar || !props.guild) return;
 				const channel = ChannelStore.getChannel(
 					SelectedChannelStore.getChannelId(props.guild.id),
 				);
