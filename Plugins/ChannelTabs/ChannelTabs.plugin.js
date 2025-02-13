@@ -1642,13 +1642,25 @@ var isChannelDM = (channel_id) => {
 	})();
 };
 var getCurrentName = (pathname = location.pathname) => {
-	const [ _, gId, cId ] = (pathname.match(/^\/channels\/(\d+|@me|@favorites)\/\b(\d+|\w+(-\w+)*)\b/) || []);
+	const [_, gId, cId] =
+		pathname.match(/^\/channels\/(\d+|@me|@favorites)\/\b(\d+|\w+(-\w+)*)\b/) ||
+		[];
 	if (cId) {
 		const channel = ChannelStore.getChannel(cId);
 		const guild = GuildStore.getGuild(gId);
 		if (channel?.name) return (channel.guildId ? "@" : "#") + channel.name;
 		else if (guild?.name) return guild.name;
-		else if (channel?.rawRecipients) return (channel.rawRecipients.map((u) =>  (!u.display_name && !u.global_name && u.bot) ? `BOT (@${u.username})` : (RelationshipStore.getNickname(u.id) || u.display_name) ).join(', ') || `${channel.rawRecipients[0].display_name} (@${channel.rawRecipients[0].username})` );
+		else if (channel?.rawRecipients)
+			return (
+				channel.rawRecipients
+					.map((u) =>
+						!u.display_name && !u.global_name && u.bot
+							? `BOT (@${u.username})`
+							: RelationshipStore.getNickname(u.id) || u.display_name,
+					)
+					.join(", ") ||
+				`${channel.rawRecipients[0].display_name} (@${channel.rawRecipients[0].username})`
+			);
 		else return pathname;
 	} else {
 		if (pathname === "/channels/@me") return "Friends";
@@ -1663,12 +1675,15 @@ var getCurrentName = (pathname = location.pathname) => {
 };
 var getCurrentIconUrl = (pathname = location.pathname) => {
 	try {
-		const [ _, gId, cId ] = (pathname.match(/^\/channels\/(\d+|@me|@favorites)\/\b(\d+|\w+(-\w+)*)\b/) || []);
+		const [_, gId, cId] =
+			pathname.match(
+				/^\/channels\/(\d+|@me|@favorites)\/\b(\d+|\w+(-\w+)*)\b/,
+			) || [];
 		if (!cId) return DefaultUserIconGrey;
 		if (!ChannelStore || !ChannelStore.getChannel) return DefaultUserIconGrey;
 		const channel = ChannelStore.getChannel(cId);
 		if (!channel && !gId) return DefaultUserIconGrey;
-		if (channel?.guild_id || gId && gId !== '@me' && gId !== '@favorites') {
+		if (channel?.guild_id || (gId && gId !== "@me" && gId !== "@favorites")) {
 			if (!GuildStore || !GuildStore.getGuild) return DefaultUserIconGrey;
 			const guild = GuildStore.getGuild(channel?.guild_id || gId);
 			if (!guild || !guild.getIconURL) return DefaultUserIconGrey;
@@ -1810,12 +1825,7 @@ var CozyTab = (props) => {
 					)
 				: /* @__PURE__ */ React.createElement(
 						"foreignObject",
-						{
-							x: 0,
-							y: 0,
-							width: 20,
-							height: 20,
-						},
+						{ x: 0, y: 0, width: 20, height: 20 },
 						/* @__PURE__ */ React.createElement(TabIcon, {
 							iconUrl: props.iconUrl,
 						}),
@@ -1909,12 +1919,7 @@ var CompactTab = (props) => {
 					)
 				: /* @__PURE__ */ React.createElement(
 						"foreignObject",
-						{
-							x: 0,
-							y: 0,
-							width: 20,
-							height: 20,
-						},
+						{ x: 0, y: 0, width: 20, height: 20 },
 						/* @__PURE__ */ React.createElement(TabIcon, {
 							iconUrl: props.iconUrl,
 						}),
@@ -2236,12 +2241,7 @@ var Fav = (props) =>
 					)
 				: /* @__PURE__ */ React.createElement(
 						"foreignObject",
-						{
-							x: 0,
-							y: 0,
-							width: 20,
-							height: 20,
-						},
+						{ x: 0, y: 0, width: 20, height: 20 },
 						/* @__PURE__ */ React.createElement(FavIcon, {
 							iconUrl: props.iconUrl,
 						}),
@@ -4098,7 +4098,11 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 				);
 			}),
 			ContextMenu.patch("guild-context", (returnValue, props) => {
-				if (!this.settings.showTabBar && !this.settings.showFavBar || !props.guild) return;
+				if (
+					(!this.settings.showTabBar && !this.settings.showFavBar) ||
+					!props.guild
+				)
+					return;
 				const channel = ChannelStore.getChannel(
 					SelectedChannelStore.getChannelId(props.guild.id),
 				);
