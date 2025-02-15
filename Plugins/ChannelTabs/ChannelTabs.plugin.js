@@ -3120,23 +3120,21 @@ var TopBar = class TopBar2 extends React.Component {
 				},
 			);
 		} else {
+			const url = fav.url + (fav.guildId ? `/${fav.guildId}` : "");
 			this.setState(
 				{
 					tabs: [
 						...this.state.tabs,
-						...fav.map((fav2) => {
-							const url = fav2.url + (fav2.guildId ? `/${fav2.guildId}` : "");
-							return {
-								url,
-								selected: false,
-								name: getCurrentName(url),
-								iconUrl: getCurrentIconUrl(url),
-								currentStatus: getCurrentUserStatus(url),
-								channelId:
-									fav2.channelId ||
-									SelectedChannelStore.getChannelId(fav2.guildId),
-							};
-						}),
+						{
+							url,
+							selected: false,
+							name: getCurrentName(url),
+							iconUrl: getCurrentIconUrl(url),
+							currentStatus: getCurrentUserStatus(url),
+							channelId:
+								fav.channelId ||
+								SelectedChannelStore.getChannelId(fav.guildId),
+						},
 					],
 				},
 				this.props.plugin.saveSettings,
