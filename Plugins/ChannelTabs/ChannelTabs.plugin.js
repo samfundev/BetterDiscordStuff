@@ -184,7 +184,7 @@ var Slider = getModule(
 );
 var NavShortcuts = getModule(byKeys("NAVIGATE_BACK", "NAVIGATE_FORWARD"));
 var [TitleBar, TitleBarKey] = Webpack.getWithKey(
-	byStrings("data-windows", "title"),
+	byStrings(".PlatformTypes.WINDOWS&&(0,", "title"),
 	{
 		name: "TitleBar",
 		fatal: true,
