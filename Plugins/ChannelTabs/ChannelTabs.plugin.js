@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.7.2
+ * @version 2.7.3
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -31,6 +31,9 @@
 
 @else@*/
 const CHANGES = {
+	"2.7.3": {
+		fixed: ["Fixed for the new update to Discord"],
+	},
 	"2.7.2": {
 		fixed: [
 			"Fixed incorrectly hiding the top bar in certain cases",
