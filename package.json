@@ -4,7 +4,7 @@
 	"description": "all my stuff for betterdiscord",
 	"type": "module",
 	"scripts": {
-		"dev": "node lib/dev.ts",
+		"dev": "node --watch lib/dev.ts",
 		"format": "prettier --write ."
 	},
 	"maintainers": [
