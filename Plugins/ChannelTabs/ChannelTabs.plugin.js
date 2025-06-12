@@ -183,6 +183,8 @@ var [TitleBar, TitleBarKey] = Webpack.getWithKey(
 );
 if (!TitleBar) missingModule({ name: "TitleBar", fatal: true });
 var IconUtilities = getModule(byKeys("getChannelIconURL"));
+var standardSidebarView =
+	BdApi.Webpack.getByKeys("standardSidebarView")?.standardSidebarView ?? "";
 var Icons = {
 	XSmallIcon: () =>
 		/* @__PURE__ */ React.createElement(
@@ -3581,6 +3583,10 @@ module.exports = class ChannelTabs {
 
 div:has(> div > #channelTabs-container) {
 	grid-template-rows: [top] auto [titleBarEnd] min-content [noticeEnd] 1fr [end];
+}
+
+.${standardSidebarView} {
+	-webkit-app-region: no-drag;
 }
 
 /*
