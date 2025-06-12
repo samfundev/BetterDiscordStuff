@@ -154,15 +154,7 @@ var DiscordConstants = {
 		searchExports: true,
 	}),
 };
-var Textbox =
-	getModule((m) => m.defaultProps && m.defaultProps.type == "text", {
-		searchExports: true,
-	}) ??
-	((props) =>
-		/* @__PURE__ */ React.createElement("input", {
-			...props,
-			onChange: (e) => props?.onChange(e.target.value),
-		}));
+var Textbox = BdApi.Components.TextInput;
 var UnreadStateStore =
 	getModule((m) => m.isEstimated, {
 		feature: "Unread/Mention Indicators",
@@ -191,13 +183,78 @@ var [TitleBar, TitleBarKey] = Webpack.getWithKey(
 );
 if (!TitleBar) missingModule({ name: "TitleBar", fatal: true });
 var IconUtilities = getModule(byKeys("getChannelIconURL"));
-var Icons = getModule((m) =>
-	Object.keys(m).some(
-		(property) =>
-			property.endsWith("Icon") &&
-			m[property].toString().includes("http://www.w3.org/2000/svg"),
-	),
-);
+var Icons = {
+	XSmallIcon: () =>
+		/* @__PURE__ */ React.createElement(
+			"svg",
+			{
+				"aria-hidden": "true",
+				role: "img",
+				xmlns: "http://www.w3.org/2000/svg",
+				width: "24",
+				height: "24",
+				fill: "none",
+				viewBox: "0 0 24 24",
+			},
+			/* @__PURE__ */ React.createElement("path", {
+				fill: "var(--interactive-normal)",
+				d: "M17.3 18.7a1 1 0 0 0 1.4-1.4L13.42 12l5.3-5.3a1 1 0 0 0-1.42-1.4L12 10.58l-5.3-5.3a1 1 0 0 0-1.4 1.42L10.58 12l-5.3 5.3a1 1 0 1 0 1.42 1.4L12 13.42l5.3 5.3Z",
+				class: "",
+			}),
+		),
+	PlusSmallIcon: () =>
+		/* @__PURE__ */ React.createElement(
+			"svg",
+			{
+				"aria-hidden": "true",
+				role: "img",
+				xmlns: "http://www.w3.org/2000/svg",
+				width: "20",
+				height: "20",
+				fill: "none",
+				viewBox: "0 0 24 24",
+			},
+			/* @__PURE__ */ React.createElement("path", {
+				fill: "var(--interactive-normal)",
+				d: "M13 6a1 1 0 1 0-2 0v5H6a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5V6Z",
+				class: "",
+			}),
+		),
+	ChevronLargeLeftIcon: () =>
+		/* @__PURE__ */ React.createElement(
+			"svg",
+			{
+				"aria-hidden": "true",
+				role: "img",
+				xmlns: "http://www.w3.org/2000/svg",
+				width: "24",
+				height: "24",
+				fill: "none",
+				viewBox: "0 0 24 24",
+			},
+			/* @__PURE__ */ React.createElement("path", {
+				fill: "var(--interactive-normal)",
+				d: "M15.7 3.3a1 1 0 0 1 0 1.4L8.42 12l7.3 7.3a1 1 0 0 1-1.42 1.4l-8-8a1 1 0 0 1 0-1.4l8-8a1 1 0 0 1 1.42 0Z",
+			}),
+		),
+	ChevronLargeRightIcon: () =>
+		/* @__PURE__ */ React.createElement(
+			"svg",
+			{
+				"aria-hidden": "true",
+				role: "img",
+				xmlns: "http://www.w3.org/2000/svg",
+				width: "24",
+				height: "24",
+				fill: "none",
+				viewBox: "0 0 24 24",
+			},
+			/* @__PURE__ */ React.createElement("path", {
+				fill: "var(--interactive-normal)",
+				d: "M8.3 3.3a1 1 0 0 0 0 1.4l7.29 7.3-7.3 7.3a1 1 0 1 0 1.42 1.4l8-8a1 1 0 0 0 0-1.4l-8-8a1 1 0 0 0-1.42 0Z",
+			}),
+		),
+};
 var Close =
 	Icons?.XSmallIcon ??
 	(() =>
@@ -3511,6 +3568,12 @@ module.exports = class ChannelTabs {
 /* 
 //#region Tab Base/Container
 */
+
+.bd-text-input {
+  /* this should be in BD */
+  border: 1px solid var(--input-border);
+  width: 100%;
+}
 
 .channelTabs-tabNav {
 	display:none;
