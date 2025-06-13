@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.7.2
+ * @version 2.7.3
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -31,6 +31,9 @@
 
 @else@*/
 const CHANGES = {
+	"2.7.3": {
+		fixed: ["Fixed for the new update to Discord"],
+	},
 	"2.7.2": {
 		fixed: [
 			"Fixed incorrectly hiding the top bar in certain cases",
@@ -184,7 +187,7 @@ var Slider = getModule(
 );
 var NavShortcuts = getModule(byKeys("NAVIGATE_BACK", "NAVIGATE_FORWARD"));
 var [TitleBar, TitleBarKey] = Webpack.getWithKey(
-	byStrings("data-windows", "title"),
+	byStrings(".PlatformTypes.WINDOWS&&(0,", "title"),
 	{
 		name: "TitleBar",
 		fatal: true,
