@@ -132,13 +132,20 @@ const Slider = getModule(
 	{ searchExports: true },
 );
 const NavShortcuts = getModule(byKeys("NAVIGATE_BACK", "NAVIGATE_FORWARD"));
-const [TitleBar, TitleBarKey] = Webpack.getWithKey(
+const [TitleBar, TitleBarKey] = (() => {
+    const [m, k] = Webpack.getWithKey(
 	byStrings(".PlatformTypes.WINDOWS&&(0,", "title"),
-	{
-		name: "TitleBar",
-		fatal: true,
-	},
-);
+        {name:"Toolbar", fatal:true}
+    ) ?? [];
+
+    if (typeof m?.[k] !== "function") {
+        const msg = "[ChannelTabs] ❌ Toolbar hook missing.";
+        console.error(msg);
+        BdApi.UI.showNotice(msg, {type:"error", timeout:10_000});
+        throw new Error(msg);
+    }
+    return [m, k];
+})();
 const IconUtilities = getModule(byKeys("getChannelIconURL"));
 
 const Icons = getModule((m) =>
