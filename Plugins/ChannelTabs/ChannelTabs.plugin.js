@@ -188,11 +188,8 @@ var Slider = getModule(
 var NavShortcuts = getModule(byKeys("NAVIGATE_BACK", "NAVIGATE_FORWARD"));
 var [TitleBar, TitleBarKey] = Webpack.getWithKey(
 	byStrings(".PlatformTypes.WINDOWS&&(0,", "title"),
-	{
-		name: "TitleBar",
-		fatal: true,
-	},
 );
+if (!TitleBar) missingModule({ name: "TitleBar", fatal: true });
 var IconUtilities = getModule(byKeys("getChannelIconURL"));
 var Icons = getModule((m) =>
 	Object.keys(m).some(
@@ -1669,10 +1666,13 @@ var getCurrentName = (pathname = location.pathname) => {
 					.map((u) =>
 						!u.display_name && !u.global_name && u.bot
 							? `BOT (@${u.username})`
-							: RelationshipStore.getNickname(u.id) || u.display_name,
+							: RelationshipStore.getNickname(u.id) ||
+								u.display_name ||
+								u.global_name ||
+								u.username,
 					)
 					.join(", ") ||
-				`${channel.rawRecipients[0].display_name} (@${channel.rawRecipients[0].username})`
+				`${channel.rawRecipients[0].display_name || channel.rawRecipients[0].global_name || channel.rawRecipients[0].username} (@${channel.rawRecipients[0].username})`
 			);
 		else return pathname;
 	} else {
