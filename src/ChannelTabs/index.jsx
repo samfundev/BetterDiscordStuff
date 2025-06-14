@@ -40,8 +40,19 @@ function missingModule({ name = "<unnamed>", feature, fatal = false }) {
 		(site) => site.getFunctionName() === "getModule",
 	);
 	const trace = stack.filter((_, i) => i > index).join("\n");
-	console.warn(`Could not find '${name}' module.\n${trace}`);
-	if (fatal) throw `Could not find '${name}' module.`;
+	console[fatal ? "error" : "warn"](
+		`Could not find '${name}' module.\n${trace}`,
+	);
+	if (fatal) {
+		const content = BdApi.DOM.parseHTML(
+			`<span style="background: white; color: var(--color); padding: 1px 3px; margin-right: 3px; border-radius: 5px;">ChannelTabs</span> The critical module "${name}" could not be found. The plugin will not be able to load.`,
+			true,
+		);
+		BdApi.UI.showNotice(content, {
+			type: "error",
+		});
+		throw `Could not find '${name}' module.`;
+	}
 	if (feature != null) {
 		missingFeatures.push(feature);
 
@@ -132,20 +143,10 @@ const Slider = getModule(
 	{ searchExports: true },
 );
 const NavShortcuts = getModule(byKeys("NAVIGATE_BACK", "NAVIGATE_FORWARD"));
-const [TitleBar, TitleBarKey] = (() => {
-    const [m, k] = Webpack.getWithKey(
-	byStrings(".PlatformTypes.WINDOWS&&(0,", "title"),
-        {name:"Toolbar", fatal:true}
-    ) ?? [];
-
-    if (typeof m?.[k] !== "function") {
-        const msg = "[ChannelTabs] ❌ Toolbar hook missing.";
-        console.error(msg);
-        BdApi.UI.showNotice(msg, {type:"error", timeout:10_000});
-        throw new Error(msg);
-    }
-    return [m, k];
-})();
+const [TitleBar, TitleBarKey] = Webpack.getWithKey(
+	byStrings(".PlatformTypes.WINDOWS&asdas&(0,", "title"),
+);
+if (!TitleBar) missingModule({ name: "TitleBar", fatal: true });
 const IconUtilities = getModule(byKeys("getChannelIconURL"));
 
 const Icons = getModule((m) =>
@@ -1648,7 +1649,10 @@ const getCurrentName = (pathname = location.pathname) => {
 					.map((u) =>
 						!u.display_name && !u.global_name && u.bot
 							? `BOT (@${u.username})`
-							: RelationshipStore.getNickname(u.id) || u.display_name || u.global_name || u.username,
+							: RelationshipStore.getNickname(u.id) ||
+								u.display_name ||
+								u.global_name ||
+								u.username,
 					)
 					.join(", ") ||
 				`${channel.rawRecipients[0].display_name || channel.rawRecipients[0].global_name || channel.rawRecipients[0].username} (@${channel.rawRecipients[0].username})`
