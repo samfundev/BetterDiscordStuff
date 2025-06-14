@@ -102,7 +102,11 @@ const DiscordConstants = {
 		searchExports: true,
 	}),
 };
-const Textbox = BdApi.Components.TextInput;
+const Textbox = (props) => (
+	<div className="channelTabs-input">
+		<BdApi.Components.TextInput {...props} />
+	</div>
+);
 const UnreadStateStore =
 	getModule((m) => m.isEstimated, {
 		feature: "Unread/Mention Indicators",
@@ -3594,8 +3598,7 @@ module.exports = class ChannelTabs {
 //#region Tab Base/Container
 */
 
-.bd-text-input {
-  /* this should be in BD */
+.channelTabs-input .bd-text-input {
   border: 1px solid var(--input-border);
   width: 100%;
 }

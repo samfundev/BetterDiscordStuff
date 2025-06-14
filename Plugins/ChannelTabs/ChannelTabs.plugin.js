@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.7.4
+ * @version 2.7.5
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -161,7 +161,14 @@ var DiscordConstants = {
 		searchExports: true,
 	}),
 };
-var Textbox = BdApi.Components.TextInput;
+var Textbox = (props) =>
+	/* @__PURE__ */ React.createElement(
+		"div",
+		{ className: "channelTabs-input" },
+		/* @__PURE__ */ React.createElement(BdApi.Components.TextInput, {
+			...props,
+		}),
+	);
 var UnreadStateStore =
 	getModule((m) => m.isEstimated, {
 		feature: "Unread/Mention Indicators",
@@ -3578,8 +3585,7 @@ module.exports = class ChannelTabs {
 //#region Tab Base/Container
 */
 
-.bd-text-input {
-  /* this should be in BD */
+.channelTabs-input .bd-text-input {
   border: 1px solid var(--input-border);
   width: 100%;
 }
