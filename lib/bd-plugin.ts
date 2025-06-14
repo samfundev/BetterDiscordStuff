@@ -4,7 +4,7 @@ import { basename, dirname, join } from "node:path";
 import type { OnStartResult, Plugin } from "esbuild";
 import type { Meta } from "betterdiscord";
 import prettier from "prettier";
-import { simpleGit } from "simple-git";
+import { simpleGit, type DefaultLogFields, type ListLogLine } from "simple-git";
 
 const git = simpleGit();
 
@@ -152,13 +152,24 @@ export default {
 				const versions = {};
 				let version = null;
 				const packagePath = join(dirname(output.entryPoint), "package.json");
+
+				async function getVersion(line: DefaultLogFields) {
+					return JSON.parse(
+						await git.show(`${line.hash}:${packagePath}`).catch(() => "{}"),
+					).version;
+				}
+
+				// If we're trying to bump the version, include the uncommitted version
+				const uncommittedVersion = JSON.parse(
+					await readFile(packagePath, "utf8"),
+				).version;
+				const committedVersion = await getVersion(all[0]);
+				if (uncommittedVersion != committedVersion)
+					version = uncommittedVersion;
+
 				for (const line of all) {
 					if ((line.diff?.files ?? []).some((f) => f.file === packagePath)) {
-						const packageText = await git
-							.show(`${line.hash}:${packagePath}`)
-							.catch(() => null);
-
-						version = JSON.parse(packageText).version;
+						version = await getVersion(line);
 					}
 
 					if (!version) continue;
