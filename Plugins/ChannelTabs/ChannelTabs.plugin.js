@@ -2611,45 +2611,6 @@ function closeCurrentTab() {
 	if (TopBarRef.current)
 		TopBarRef.current.closeTab(TopBarRef.current.state.selectedTabIndex);
 }
-function HorizontalScroll(props) {
-	const container = React.useRef(null);
-	let target = 0;
-	function expDecay(a, b, decay, dt) {
-		return b + (a - b) * Math.exp((-decay * dt) / 1e3);
-	}
-	let last = Date.now();
-	function update() {
-		container.current.scrollLeft = expDecay(
-			container.current.scrollLeft,
-			target,
-			10,
-			Date.now() - last,
-		);
-		last = Date.now();
-		if (Math.abs(container.current.scrollLeft - target) > 1) {
-			requestAnimationFrame(update);
-		}
-	}
-	return /* @__PURE__ */ React.createElement(
-		"div",
-		{
-			ref: container,
-			onWheel: async (event) => {
-				target += event.deltaY;
-				target = Math.max(
-					0,
-					Math.min(
-						target,
-						container.current.scrollWidth - container.current.clientWidth,
-					),
-				);
-				update();
-			},
-			...props,
-		},
-		props.children,
-	);
-}
 var TabBar = (props) =>
 	/* @__PURE__ */ React.createElement(
 		"div",
@@ -2707,67 +2668,57 @@ var TabBar = (props) =>
 				/* @__PURE__ */ React.createElement(Close, null),
 			),
 		),
-		/* @__PURE__ */ React.createElement(
-			HorizontalScroll,
-			{
-				style: {
-					display: "flex",
-					overflowX: "auto",
-					scrollbarWidth: "none",
-				},
-			},
-			props.tabs.map((tab, tabIndex) =>
-				React.createElement(
-					Flux.connectStores(
-						[UnreadStateStore, UserTypingStore, UserStatusStore],
-						() => ({
-							unreadCount: UnreadStateStore.getUnreadCount(tab.channelId),
-							unreadEstimated: UnreadStateStore.isEstimated(tab.channelId),
-							hasUnread: UnreadStateStore.hasUnread(tab.channelId),
-							mentionCount: UnreadStateStore.getMentionCount(tab.channelId),
-							hasUsersTyping: isChannelTyping(tab.channelId),
-							currentStatus: getCurrentUserStatus(tab.url),
-						}),
-					)((result) =>
-						/* @__PURE__ */ React.createElement(Tab, {
-							switchToTab: props.switchToTab,
-							closeTab: props.closeTab,
-							addToFavs: props.addToFavs,
-							minimizeTab: props.minimizeTab,
-							moveLeft: () =>
-								props.move(
-									tabIndex,
-									(tabIndex + props.tabs.length - 1) % props.tabs.length,
-								),
-							moveRight: () =>
-								props.move(tabIndex, (tabIndex + 1) % props.tabs.length),
-							openInNewTab: () => props.openInNewTab(tab),
-							moveTab: props.move,
-							tabCount: props.tabs.length,
-							tabIndex,
-							name: tab.name,
-							iconUrl: tab.iconUrl,
-							currentStatus: result.currentStatus,
-							url: tab.url,
-							selected: tab.selected,
-							minimized: tab.minimized,
-							channelId: tab.channelId,
-							unreadCount: result.unreadCount,
-							unreadEstimated: result.unreadEstimated,
-							hasUnread: result.hasUnread,
-							mentionCount: result.mentionCount,
-							hasUsersTyping: result.hasUsersTyping,
-							showTabUnreadBadges: props.showTabUnreadBadges,
-							showTabMentionBadges: props.showTabMentionBadges,
-							showTabTypingBadge: props.showTabTypingBadge,
-							showEmptyTabBadges: props.showEmptyTabBadges,
-							showActiveTabUnreadBadges: props.showActiveTabUnreadBadges,
-							showActiveTabMentionBadges: props.showActiveTabMentionBadges,
-							showActiveTabTypingBadge: props.showActiveTabTypingBadge,
-							showEmptyActiveTabBadges: props.showEmptyActiveTabBadges,
-							compactStyle: props.compactStyle,
-						}),
-					),
+		props.tabs.map((tab, tabIndex) =>
+			React.createElement(
+				Flux.connectStores(
+					[UnreadStateStore, UserTypingStore, UserStatusStore],
+					() => ({
+						unreadCount: UnreadStateStore.getUnreadCount(tab.channelId),
+						unreadEstimated: UnreadStateStore.isEstimated(tab.channelId),
+						hasUnread: UnreadStateStore.hasUnread(tab.channelId),
+						mentionCount: UnreadStateStore.getMentionCount(tab.channelId),
+						hasUsersTyping: isChannelTyping(tab.channelId),
+						currentStatus: getCurrentUserStatus(tab.url),
+					}),
+				)((result) =>
+					/* @__PURE__ */ React.createElement(Tab, {
+						switchToTab: props.switchToTab,
+						closeTab: props.closeTab,
+						addToFavs: props.addToFavs,
+						minimizeTab: props.minimizeTab,
+						moveLeft: () =>
+						props.move(
+						tabIndex,
+						(tabIndex + props.tabs.length - 1) % props.tabs.length,
+						),
+						moveRight: () =>
+						props.move(tabIndex, (tabIndex + 1) % props.tabs.length),
+						openInNewTab: () => props.openInNewTab(tab),
+						moveTab: props.move,
+						tabCount: props.tabs.length,
+						tabIndex,
+						name: tab.name,
+						iconUrl: tab.iconUrl,
+						currentStatus: result.currentStatus,
+						url: tab.url,
+						selected: tab.selected,
+						minimized: tab.minimized,
+						channelId: tab.channelId,
+						unreadCount: result.unreadCount,
+						unreadEstimated: result.unreadEstimated,
+						hasUnread: result.hasUnread,
+						mentionCount: result.mentionCount,
+						hasUsersTyping: result.hasUsersTyping,
+						showTabUnreadBadges: props.showTabUnreadBadges,
+						showTabMentionBadges: props.showTabMentionBadges,
+						showTabTypingBadge: props.showTabTypingBadge,
+						showEmptyTabBadges: props.showEmptyTabBadges,
+						showActiveTabUnreadBadges: props.showActiveTabUnreadBadges,
+						showActiveTabMentionBadges: props.showActiveTabMentionBadges,
+						showActiveTabTypingBadge: props.showActiveTabTypingBadge,
+						showEmptyActiveTabBadges: props.showEmptyActiveTabBadges,
+						compactStyle: props.compactStyle,
+					}),
 				),
 			),
 		),
@@ -3610,12 +3561,12 @@ div:has(> div > #channelTabs-container) {
 	z-index: 1000;
 	background: none;
 	flex: 1;
-	max-width: 100vw;
 }
 
 .channelTabs-tabContainer {
 	display: flex;
 	align-items: center;
+ 	flex-wrap: wrap;
 }
 
 .channelTabs-trailing {
