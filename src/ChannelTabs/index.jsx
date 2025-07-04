@@ -135,6 +135,13 @@ const [TitleBar, TitleBarKey] = Webpack.getWithKey(
 );
 if (!TitleBar) missingModule({ name: "TitleBar", fatal: true });
 const IconUtilities = getModule(byKeys("getChannelIconURL"));
+const getGuildIconURL = (guild) =>
+	IconUtilities.getGuildIconURL({
+		id: guild.id,
+		icon: guild.icon,
+		canAnimate: false,
+		size: 40,
+	});
 const standardSidebarView =
 	BdApi.Webpack.getByKeys("standardSidebarView")?.standardSidebarView ?? "";
 
@@ -281,7 +288,7 @@ function CreateGuildContextMenuChildren(instance, props, channel) {
 										props.guild.id,
 										channel.id,
 										"#" + channel.name,
-										props.guild.getIconURL() || "",
+										getGuildIconURL(props.guild) || "",
 									),
 							},
 							{
@@ -290,7 +297,7 @@ function CreateGuildContextMenuChildren(instance, props, channel) {
 									TopBarRef.current &&
 									TopBarRef.current.addToFavs(
 										"#" + channel.name,
-										props.guild.getIconURL() || "",
+										getGuildIconURL(props.guild) || "",
 										`/channels/${props.guild.id}/${channel.id}`,
 										channel.id,
 									),
@@ -303,7 +310,7 @@ function CreateGuildContextMenuChildren(instance, props, channel) {
 									TopBarRef.current &&
 									TopBarRef.current.addToFavs(
 										props.guild.name,
-										props.guild.getIconURL() || "",
+										getGuildIconURL(props.guild) || "",
 										`/channels/${props.guild.id}`,
 										undefined,
 										props.guild.id,
@@ -335,7 +342,7 @@ function CreateTextChannelContextMenuChildren(instance, props) {
 										props.guild.id,
 										props.channel.id,
 										"#" + props.channel.name,
-										props.guild.getIconURL() || "",
+										getGuildIconURL(props.guild) || "",
 									),
 							},
 						],
@@ -346,7 +353,7 @@ function CreateTextChannelContextMenuChildren(instance, props) {
 									TopBarRef.current &&
 									TopBarRef.current.addToFavs(
 										"#" + props.channel.name,
-										props.guild.getIconURL() || "",
+										getGuildIconURL(props.guild) || "",
 										`/channels/${props.guild.id}/${props.channel.id}`,
 										props.channel.id,
 									),
@@ -1733,7 +1740,7 @@ const getCurrentIconUrl = (pathname = location.pathname) => {
 					return UserStore.getUser(channel.getRecipientId()).getAvatarURL();
 				return IconUtilities.getChannelIconURL(channel);
 			} else if (!gId.startsWith("@")) {
-				return GuildStore.getGuild(gId).getIconURL();
+				return getGuildIconURL(GuildStore.getGuild(gId));
 			}
 		}
 	} catch (error) {
