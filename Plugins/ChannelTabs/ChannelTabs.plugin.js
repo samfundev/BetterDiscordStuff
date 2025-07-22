@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.7.5
+ * @version 2.7.6
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -31,6 +31,15 @@
 
 @else@*/
 const CHANGES = {
+	"2.7.6": {
+		fixed: [
+			"Fixed image viewer buttons not being interactable",
+			"Fixed tabs not updating after popping out a voice call",
+			"Fixed favorite groups not having a background",
+			"Fixed server icons",
+		],
+		improved: ["Stop caching icons"],
+	},
 	"2.7.4": {
 		fixed: [
 			"Fixed being able to drag the window in the settings",
@@ -197,15 +206,15 @@ var [TitleBar, TitleBarKey] = Webpack.getWithKey(
 );
 if (!TitleBar) missingModule({ name: "TitleBar", fatal: true });
 var IconUtilities = getModule(byKeys("getChannelIconURL"));
-var getGuildIconURL = (guild) =>
-	IconUtilities.getGuildIconURL({
-		id: guild.id,
-		icon: guild.icon,
-		canAnimate: false,
-		size: 40,
-	});
 var standardSidebarView =
 	BdApi.Webpack.getByKeys("standardSidebarView")?.standardSidebarView ?? "";
+var backdropClasses = getModule(byKeys("backdrop", "withLayer"));
+var noDragClasses = [
+	standardSidebarView,
+	// Settings view
+	backdropClasses?.backdrop,
+	// Anything that has a backdrop
+].filter((x) => x);
 var Icons = {
 	XSmallIcon: () =>
 		/* @__PURE__ */ React.createElement(
@@ -1758,7 +1767,10 @@ var getCurrentIconUrl = (pathname = location.pathname) => {
 					return UserStore.getUser(channel.getRecipientId()).getAvatarURL();
 				return IconUtilities.getChannelIconURL(channel);
 			} else if (!gId.startsWith("@")) {
-				return getGuildIconURL(GuildStore.getGuild(gId));
+				return (
+					IconUtilities.getGuildIconURL(GuildStore.getGuild(gId)) ??
+					DefaultUserIconGrey
+				);
 			}
 		}
 	} catch (error) {
@@ -3258,13 +3270,6 @@ var TopBar = class TopBar2 extends React.Component {
 		return /* @__PURE__ */ React.createElement(
 			"div",
 			{ id: "channelTabs-container" },
-			/* @__PURE__ */ React.createElement(
-				"style",
-				null,
-				`[data-popout-root="true"] #channelTabs-container {
-						display: none;
-					}`,
-			),
 			!this.state.showTabBar
 				? null
 				: /* @__PURE__ */ React.createElement(TabBar, {
@@ -3553,7 +3558,7 @@ div:has(> div > #channelTabs-container) {
 	grid-template-rows: [top] auto [titleBarEnd] min-content [noticeEnd] 1fr [end];
 }
 
-.${standardSidebarView} {
+${noDragClasses.map((x) => `.${x}`).join(", ")} {
 	-webkit-app-region: no-drag;
 }
 
@@ -4013,7 +4018,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 	display: none;
 	position: absolute;
 	min-width: max-content;
-	background-color: var(--background-floating);
+	background-color: var(--background-surface-high);
 	-webkit-box-shadow: var(--elevation-high);
 	box-shadow: var(--elevation-high);
 	border-radius: 4px;
@@ -4107,7 +4112,8 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 	//#region Patches
 	patchTitleBar(promiseState) {
 		if (promiseState.cancelled) return;
-		Patcher.after(TitleBar, TitleBarKey, (thisObject, _, returnValue) => {
+		Patcher.after(TitleBar, TitleBarKey, (thisObject, [props], returnValue) => {
+			if (props.windowKey !== void 0) return;
 			returnValue.props.style = { paddingLeft: 0 };
 			returnValue.props.children = /* @__PURE__ */ React.createElement(TopBar, {
 				leading: returnValue.props.children[1],
