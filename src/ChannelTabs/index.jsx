@@ -135,8 +135,14 @@ const [TitleBar, TitleBarKey] = Webpack.getWithKey(
 );
 if (!TitleBar) missingModule({ name: "TitleBar", fatal: true });
 const IconUtilities = getModule(byKeys("getChannelIconURL"));
+
 const standardSidebarView =
 	BdApi.Webpack.getByKeys("standardSidebarView")?.standardSidebarView ?? "";
+const backdropClasses = getModule(byKeys("backdrop", "withLayer"));
+const noDragClasses = [
+	standardSidebarView, // Settings view
+	backdropClasses?.backdrop, // Anything that has a backdrop
+].filter((x) => x);
 
 const Icons = {
 	XSmallIcon: () => (
@@ -3556,7 +3562,7 @@ div:has(> div > #channelTabs-container) {
 	grid-template-rows: [top] auto [titleBarEnd] min-content [noticeEnd] 1fr [end];
 }
 
-.${standardSidebarView} {
+${noDragClasses.map((x) => `.${x}`).join(", ")} {
 	-webkit-app-region: no-drag;
 }
 
