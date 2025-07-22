@@ -4022,7 +4022,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 	display: none;
 	position: absolute;
 	min-width: max-content;
-	background-color: var(--background-floating);
+	background-color: var(--background-surface-high);
 	-webkit-box-shadow: var(--elevation-high);
 	box-shadow: var(--elevation-high);
 	border-radius: 4px;
