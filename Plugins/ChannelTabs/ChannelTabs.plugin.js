@@ -352,7 +352,6 @@ function CreateGuildContextMenuChildren(instance, props, channel) {
 										props.guild.id,
 										channel.id,
 										"#" + channel.name,
-										getGuildIconURL(props.guild) || "",
 									),
 							},
 							{
@@ -361,7 +360,6 @@ function CreateGuildContextMenuChildren(instance, props, channel) {
 									TopBarRef.current &&
 									TopBarRef.current.addToFavs(
 										"#" + channel.name,
-										getGuildIconURL(props.guild) || "",
 										`/channels/${props.guild.id}/${channel.id}`,
 										channel.id,
 									),
@@ -374,7 +372,6 @@ function CreateGuildContextMenuChildren(instance, props, channel) {
 									TopBarRef.current &&
 									TopBarRef.current.addToFavs(
 										props.guild.name,
-										getGuildIconURL(props.guild) || "",
 										`/channels/${props.guild.id}`,
 										void 0,
 										props.guild.id,
@@ -405,7 +402,6 @@ function CreateTextChannelContextMenuChildren(instance, props) {
 										props.guild.id,
 										props.channel.id,
 										"#" + props.channel.name,
-										getGuildIconURL(props.guild) || "",
 									),
 							},
 						],
@@ -416,7 +412,6 @@ function CreateTextChannelContextMenuChildren(instance, props) {
 									TopBarRef.current &&
 									TopBarRef.current.addToFavs(
 										"#" + props.channel.name,
-										getGuildIconURL(props.guild) || "",
 										`/channels/${props.guild.id}/${props.channel.id}`,
 										props.channel.id,
 									),
@@ -446,9 +441,6 @@ function CreateThreadChannelContextMenuChildren(instance, props) {
 										props.channel.guild_id,
 										props.channel.id,
 										"#" + props.channel.name,
-										getCurrentIconUrl(
-											`/channels/${props.channel.guild_id}/${props.channel.parent_id}`,
-										) || "",
 									),
 							},
 						],
@@ -459,9 +451,6 @@ function CreateThreadChannelContextMenuChildren(instance, props) {
 									TopBarRef.current &&
 									TopBarRef.current.addToFavs(
 										"#" + props.channel.name,
-										getCurrentIconUrl(
-											`/channels/${props.channel.guild_id}/${props.channel.parent_id}`,
-										) || "",
 										`/channels/${props.channel.guild_id}/${props.channel.id}`,
 										props.channel.id,
 									),
@@ -493,7 +482,6 @@ function CreateDMContextMenuChildren(instance, props) {
 										props.channel.name ||
 											RelationshipStore.getNickname(props.user.id) ||
 											props.user.globalName,
-										props.user.getAvatarURL(null, 40, false),
 									),
 							},
 						],
@@ -506,7 +494,6 @@ function CreateDMContextMenuChildren(instance, props) {
 										props.channel.name ||
 											RelationshipStore.getNickname(props.user.id) ||
 											props.user.globalName,
-										props.user.getAvatarURL(null, 40, false),
 										`/channels/@me/${props.channel.id}`,
 										props.channel.id,
 									),
@@ -542,7 +529,6 @@ function CreateGroupContextMenuChildren(instance, props) {
 														RelationshipStore.getNickname(u.id) || u.globalName,
 												)
 												.join(", "),
-										"",
 									),
 							},
 						],
@@ -559,7 +545,6 @@ function CreateGroupContextMenuChildren(instance, props) {
 														RelationshipStore.getNickname(u.id) || u.globalName,
 												)
 												.join(", "),
-										"",
 										`/channels/@me/${props.channel.id}`,
 										props.channel.id,
 									),
@@ -587,12 +572,7 @@ function CreateTabContextMenu(props, e) {
 							{
 								label: "Add to favourites",
 								action: () =>
-									props.addToFavs(
-										props.name,
-										props.iconUrl,
-										props.url,
-										props.channelId,
-									),
+									props.addToFavs(props.name, props.url, props.channelId),
 							},
 							{
 								label: "Minimize tab",
@@ -860,7 +840,6 @@ function CreateFavBarContextMenu(props, e) {
 						action: () =>
 							props.addToFavs(
 								getCurrentName(),
-								getCurrentIconUrl(),
 								location.pathname,
 								SelectedChannelStore.getChannelId(),
 							),
@@ -1803,7 +1782,7 @@ var GetTabStyles = (viewMode, item) => {
 var TabIcon = (props) =>
 	/* @__PURE__ */ React.createElement("img", {
 		className: "channelTabs-tabIcon",
-		src: !props.iconUrl ? DefaultUserIconGrey : props.iconUrl,
+		src: getCurrentIconUrl(props.url),
 	});
 var TabStatus = (props) =>
 	/* @__PURE__ */ React.createElement("rect", {
@@ -1902,16 +1881,12 @@ var CozyTab = (props) => {
 				? /* @__PURE__ */ React.createElement(
 						"foreignObject",
 						{ x: 0, y: 0, width: 20, height: 20 },
-						/* @__PURE__ */ React.createElement(TabIcon, {
-							iconUrl: props.iconUrl,
-						}),
+						/* @__PURE__ */ React.createElement(TabIcon, { url: props.url }),
 					)
 				: /* @__PURE__ */ React.createElement(
 						"foreignObject",
 						{ x: 0, y: 0, width: 20, height: 20 },
-						/* @__PURE__ */ React.createElement(TabIcon, {
-							iconUrl: props.iconUrl,
-						}),
+						/* @__PURE__ */ React.createElement(TabIcon, { url: props.url }),
 					),
 			props.currentStatus === "none"
 				? null
@@ -2164,7 +2139,7 @@ var FavMoveToGroupList = (props) => {
 var FavIcon = (props) =>
 	/* @__PURE__ */ React.createElement("img", {
 		className: "channelTabs-favIcon",
-		src: !props.iconUrl ? DefaultUserIconGrey : props.iconUrl,
+		src: getCurrentIconUrl(props.url),
 	});
 var FavStatus = (props) =>
 	/* @__PURE__ */ React.createElement("rect", {
@@ -2318,16 +2293,12 @@ var Fav = (props) =>
 				? /* @__PURE__ */ React.createElement(
 						"foreignObject",
 						{ x: 0, y: 0, width: 20, height: 20 },
-						/* @__PURE__ */ React.createElement(FavIcon, {
-							iconUrl: props.iconUrl,
-						}),
+						/* @__PURE__ */ React.createElement(FavIcon, { url: props.url }),
 					)
 				: /* @__PURE__ */ React.createElement(
 						"foreignObject",
 						{ x: 0, y: 0, width: 20, height: 20 },
-						/* @__PURE__ */ React.createElement(FavIcon, {
-							iconUrl: props.iconUrl,
-						}),
+						/* @__PURE__ */ React.createElement(FavIcon, { url: props.url }),
 					),
 			props.currentStatus === "none"
 				? null
@@ -2851,7 +2822,6 @@ var TopBar = class TopBar2 extends React.Component {
 		this.renameFav = this.renameFav.bind(this);
 		this.deleteFav = this.deleteFav.bind(this);
 		this.addToFavs = this.addToFavs.bind(this);
-		this.refreshGuildIcons = this.refreshGuildIcons.bind(this);
 		this.minimizeTab = this.minimizeTab.bind(this);
 		this.minimizeFav = this.minimizeFav.bind(this);
 		this.moveTab = this.moveTab.bind(this);
@@ -2866,9 +2836,6 @@ var TopBar = class TopBar2 extends React.Component {
 		this.openFavInNewTab = this.openFavInNewTab.bind(this);
 		this.openFavGroupInNewTab = this.openFavGroupInNewTab.bind(this);
 		this.hideFavBar = this.hideFavBar.bind(this);
-	}
-	componentDidMount() {
-		this.refreshGuildIcons();
 	}
 	//#endregion
 	//#region Tab Functions
@@ -3039,27 +3006,11 @@ var TopBar = class TopBar2 extends React.Component {
 	 * This indicates that the currently selected channel needs to get selected instead of the
 	 * provided channel id (which should be empty when a guildId is provided)
 	 */
-	addToFavs(name, iconUrl, url, channelId, guildId) {
+	addToFavs(name, url, channelId, guildId) {
 		var groupId = -1;
 		this.setState(
 			{
-				favs: [
-					...this.state.favs,
-					{ name, iconUrl, url, channelId, guildId, groupId },
-				],
-			},
-			this.props.plugin.saveSettings,
-		);
-	}
-	refreshGuildIcons() {
-		this.setState(
-			{
-				favs: this.state.favs.map((fav) => {
-					return {
-						...fav,
-						iconUrl: getCurrentIconUrl(fav.url),
-					};
-				}),
+				favs: [...this.state.favs, { name, url, channelId, guildId, groupId }],
 			},
 			this.props.plugin.saveSettings,
 		);
@@ -3180,7 +3131,7 @@ var TopBar = class TopBar2 extends React.Component {
 	}
 	//#endregion
 	//#region New Tab Functions
-	saveChannel(guildId, channelId, name, iconUrl) {
+	saveChannel(guildId, channelId, name) {
 		if (this.state.alwaysFocusNewTabs) {
 			const newTabIndex = this.state.tabs.length;
 			this.setState(
@@ -3192,7 +3143,6 @@ var TopBar = class TopBar2 extends React.Component {
 						{
 							url: `/channels/${guildId || "@me"}/${channelId}`,
 							name,
-							iconUrl,
 							channelId,
 							minimized: false,
 							groupId: -1,
@@ -3213,7 +3163,6 @@ var TopBar = class TopBar2 extends React.Component {
 						{
 							url: `/channels/${guildId || "@me"}/${channelId}`,
 							name,
-							iconUrl,
 							channelId,
 							minimized: false,
 							groupId: -1,
@@ -3268,7 +3217,6 @@ var TopBar = class TopBar2 extends React.Component {
 							url,
 							selected: false,
 							name: getCurrentName(url),
-							iconUrl: getCurrentIconUrl(url),
 							currentStatus: getCurrentUserStatus(url),
 							channelId:
 								fav2.channelId ||
@@ -4140,7 +4088,6 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 					name: getCurrentName(),
 					url: location.pathname,
 					selected: true,
-					iconUrl: getCurrentIconUrl(),
 				},
 			];
 	}
@@ -4326,7 +4273,6 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 								url: location.pathname,
 								selected: true,
 								currentStatus: getCurrentUserStatus(location.pathname),
-								iconUrl: getCurrentIconUrl(location.pathname),
 								channelId,
 								minimized:
 									this.settings.tabs[
@@ -4348,7 +4294,6 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 					url: location.pathname,
 					selected: true,
 					currentStatus: getCurrentUserStatus(location.pathname),
-					iconUrl: getCurrentIconUrl(location.pathname),
 					channelId,
 					minimized:
 						this.settings.tabs[
