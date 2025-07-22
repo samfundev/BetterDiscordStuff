@@ -135,13 +135,6 @@ const [TitleBar, TitleBarKey] = Webpack.getWithKey(
 );
 if (!TitleBar) missingModule({ name: "TitleBar", fatal: true });
 const IconUtilities = getModule(byKeys("getChannelIconURL"));
-const getGuildIconURL = (guild) =>
-	IconUtilities.getGuildIconURL({
-		id: guild.id,
-		icon: guild.icon,
-		canAnimate: false,
-		size: 40,
-	});
 const standardSidebarView =
 	BdApi.Webpack.getByKeys("standardSidebarView")?.standardSidebarView ?? "";
 
@@ -1719,7 +1712,10 @@ const getCurrentIconUrl = (pathname = location.pathname) => {
 					return UserStore.getUser(channel.getRecipientId()).getAvatarURL();
 				return IconUtilities.getChannelIconURL(channel);
 			} else if (!gId.startsWith("@")) {
-				return getGuildIconURL(GuildStore.getGuild(gId));
+				return (
+					IconUtilities.getGuildIconURL(GuildStore.getGuild(gId)) ??
+					DefaultUserIconGrey
+				);
 			}
 		}
 	} catch (error) {
