@@ -1914,11 +1914,11 @@ const CompactTab = (props) => {
 			>
 				{props.currentStatus === "none" ? (
 					<foreignObject x={0} y={0} width={20} height={20}>
-						<TabIcon iconUrl={props.iconUrl} />
+						<TabIcon url={props.url} />
 					</foreignObject>
 				) : (
 					<foreignObject x={0} y={0} width={20} height={20}>
-						<TabIcon iconUrl={props.iconUrl} />
+						<TabIcon url={props.url} />
 					</foreignObject>
 				)}
 				{props.currentStatus === "none" ? null : (
