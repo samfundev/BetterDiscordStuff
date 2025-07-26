@@ -2317,7 +2317,6 @@ const FavItems = (props) => {
 						)((result) => (
 							<Fav
 								name={fav.name}
-								iconUrl={fav.iconUrl}
 								url={fav.url}
 								favCount={props.favs.length}
 								favGroups={props.favGroups}
@@ -2680,7 +2679,6 @@ const TabBar = (props) => (
 							tabCount={props.tabs.length}
 							tabIndex={tabIndex}
 							name={tab.name}
-							iconUrl={tab.iconUrl}
 							currentStatus={result.currentStatus}
 							url={tab.url}
 							selected={tab.selected}
