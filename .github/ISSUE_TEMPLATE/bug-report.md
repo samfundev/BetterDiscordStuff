@@ -31,7 +31,7 @@ Please also check the console by pressing `Ctrl + Shift + I` and send screenshot
 - OS: [e.g. Windows, MacOS, TempleOS]
 - Plugin Version: [e.g. 1.2.3]
 - Discord version: [PTB, Stable, Canary]
-- Compact Mode enabled? [yes or no]
+- ChannelTab's Compact Appearance enabled? [yes or no]
 
 **Additional context**
 Add any other context about the problem here.
