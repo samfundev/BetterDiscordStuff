@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.7.6
+ * @version 2.7.7
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -31,6 +31,9 @@
 
 @else@*/
 const CHANGES = {
+	"2.7.7": {
+		fixed: ["Fixed tab icons in compact mode"],
+	},
 	"2.7.6": {
 		fixed: [
 			"Fixed image viewer buttons not being interactable",
@@ -1983,16 +1986,12 @@ var CompactTab = (props) => {
 				? /* @__PURE__ */ React.createElement(
 						"foreignObject",
 						{ x: 0, y: 0, width: 20, height: 20 },
-						/* @__PURE__ */ React.createElement(TabIcon, {
-							iconUrl: props.iconUrl,
-						}),
+						/* @__PURE__ */ React.createElement(TabIcon, { url: props.url }),
 					)
 				: /* @__PURE__ */ React.createElement(
 						"foreignObject",
 						{ x: 0, y: 0, width: 20, height: 20 },
-						/* @__PURE__ */ React.createElement(TabIcon, {
-							iconUrl: props.iconUrl,
-						}),
+						/* @__PURE__ */ React.createElement(TabIcon, { url: props.url }),
 					),
 			props.currentStatus === "none"
 				? null
@@ -2384,7 +2383,6 @@ var FavItems = (props) => {
 						)((result) =>
 							/* @__PURE__ */ React.createElement(Fav, {
 								name: fav.name,
-								iconUrl: fav.iconUrl,
 								url: fav.url,
 								favCount: props.favs.length,
 								favGroups: props.favGroups,
@@ -2736,7 +2734,6 @@ var TabBar = (props) =>
 							tabCount: props.tabs.length,
 							tabIndex,
 							name: tab.name,
-							iconUrl: tab.iconUrl,
 							currentStatus: result.currentStatus,
 							url: tab.url,
 							selected: tab.selected,
