@@ -211,6 +211,22 @@ const Icons = {
 			></path>
 		</svg>
 	),
+	ChevronDownIcon: () => (
+		<svg
+			aria-hidden="true"
+			role="img"
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			fill="none"
+			viewBox="0 0 24 24"
+		>
+			<path
+				fill="currentColor"
+				d="M5.3 9.3a1 1 0 0 1 1.4 0l5.3 5.29 5.3-5.3a1 1 0 1 1 1.4 1.42l-6 6a1 1 0 0 1-1.4 0l-6-6a1 1 0 0 1 0-1.42Z"
+			></path>
+		</svg>
+	),
 };
 const Close =
 	Icons?.XSmallIcon ??
@@ -218,6 +234,7 @@ const Close =
 const PlusAlt = Icons?.PlusSmallIcon ?? (() => <b>＋</b>);
 const LeftCaret = Icons?.ChevronLargeLeftIcon ?? (() => <b>{"<"}</b>);
 const RightCaret = Icons?.ChevronLargeRightIcon ?? (() => <b>{">"}</b>);
+const ChevronDown = Icons?.ChevronDownIcon ?? (() => <b>{"▼"}</b>);
 
 const DefaultUserIconGrey = "https://cdn.discordapp.com/embed/avatars/0.png";
 const DefaultUserIconGreen = "https://cdn.discordapp.com/embed/avatars/1.png";
@@ -807,6 +824,41 @@ function CreateFavBarContextMenu(props, e) {
 			align: "top",
 		},
 	);
+}
+
+function CreateTabListContextMenu(props, e) {
+	function wrapClose(name) {
+		return (...args) => {
+			props[name](...args);
+			ContextMenu.close();
+		};
+	}
+
+	const menuItems = props.tabs.map((tab, tabIndex) => ({
+		id: `tab-${tabIndex}`,
+		render: () => (
+			<Tab
+				{...tab}
+				{...{
+					unreadCount: UnreadStateStore.getUnreadCount(tab.channelId),
+					unreadEstimated: UnreadStateStore.isEstimated(tab.channelId),
+					hasUnread: UnreadStateStore.hasUnread(tab.channelId),
+					mentionCount: UnreadStateStore.getMentionCount(tab.channelId),
+					hasUsersTyping: isChannelTyping(tab.channelId),
+					currentStatus: getCurrentUserStatus(tab.url),
+				}}
+				{...props}
+				switchToTab={wrapClose("switchToTab")}
+				closeTab={wrapClose("closeTab")}
+				tabIndex={tabIndex}
+			/>
+		),
+	}));
+
+	ContextMenu.open(e, ContextMenu.buildMenu(menuItems), {
+		position: "bottom",
+		align: "left",
+	});
 }
 
 function CreateSettingsContextMenu(instance, e) {
@@ -1983,6 +2035,7 @@ const Tab = (props) => (
 			(props.hasUnread ? " channelTabs-unread" : "") +
 			(props.mentionCount > 0 ? " channelTabs-mention" : "")
 		}
+		ref={props.ref}
 		data-mention-count={props.mentionCount}
 		data-unread-count={props.unreadCount}
 		data-unread-estimated={props.unreadEstimated}
@@ -2289,6 +2342,16 @@ const NewTab = (props) => (
 	</div>
 );
 
+const TabListDropdown = (props) => (
+	<div
+		className="channelTabs-tabListDropdown"
+		onClick={(e) => CreateTabListContextMenu(props, e)}
+		title="Show all tabs"
+	>
+		<ChevronDown />
+	</div>
+);
+
 //#endregion
 
 //#region FavItems/FavFolders Definitions
@@ -2554,14 +2617,19 @@ async function* animate(duration) {
 // This component allows users to smoothly scroll horizontally using the mouse wheel.
 function HorizontalScroll(props) {
 	const container = React.useRef(null);
-
 	let target = 0;
+	let animationId = null;
+	let scrollTimeout = null;
+
 	function expDecay(a, b, decay, dt) {
 		return b + (a - b) * Math.exp((-decay * dt) / 1000);
 	}
 
 	let last = Date.now();
 	function update() {
+		if (!container.current) return;
+
+		const before = container.current.scrollLeft;
 		container.current.scrollLeft = expDecay(
 			container.current.scrollLeft,
 			target,
@@ -2571,14 +2639,39 @@ function HorizontalScroll(props) {
 		last = Date.now();
 
 		if (Math.abs(container.current.scrollLeft - target) > 1) {
-			requestAnimationFrame(update);
+			animationId = requestAnimationFrame(update);
+		} else {
+			if (animationId) {
+				cancelAnimationFrame(animationId);
+				animationId = null;
+			}
 		}
 	}
+
+	React.useEffect(() => {
+		return () => {
+			if (animationId) {
+				cancelAnimationFrame(animationId);
+			}
+			if (scrollTimeout) {
+				clearTimeout(scrollTimeout);
+			}
+		};
+	}, []);
 
 	return (
 		<div
 			ref={container}
 			onWheel={async (event) => {
+				if (animationId) {
+					cancelAnimationFrame(animationId);
+					animationId = null;
+				}
+				if (scrollTimeout) {
+					clearTimeout(scrollTimeout);
+					scrollTimeout = null;
+				}
+
 				target += event.deltaY;
 				target = Math.max(
 					0,
@@ -2661,6 +2754,8 @@ const TabBar = (props) => (
 						}),
 					)((result) => (
 						<Tab
+							ref={(el) => (props.tabRefs.current[tabIndex] = el)}
+							key={tabIndex}
 							switchToTab={props.switchToTab}
 							closeTab={props.closeTab}
 							addToFavs={props.addToFavs}
@@ -2704,10 +2799,10 @@ const TabBar = (props) => (
 			)}
 		</HorizontalScroll>
 		<NewTab openNewTab={props.openNewTab} />
+		<TabListDropdown {...props} />
 		{props.trailing}
 	</div>
 );
-
 const FavBar = (props) => (
 	<div
 		className={
@@ -2792,6 +2887,8 @@ const TopBar = class TopBar extends React.Component {
 		this.openFavInNewTab = this.openFavInNewTab.bind(this);
 		this.openFavGroupInNewTab = this.openFavGroupInNewTab.bind(this);
 		this.hideFavBar = this.hideFavBar.bind(this);
+		this.tabRefs = React.createRef();
+		this.tabRefs.current = [];
 	}
 
 	//#endregion
@@ -2827,6 +2924,7 @@ const TopBar = class TopBar extends React.Component {
 			},
 			this.props.plugin.saveSettings,
 		);
+		this.tabRefs.current[tabIndex].scrollIntoView({ behavior: "smooth" });
 		switching = true;
 		NavigationUtils.transitionTo(this.state.tabs[tabIndex].url);
 		switching = false;
@@ -3268,6 +3366,7 @@ const TopBar = class TopBar extends React.Component {
 						addToFavs={this.addToFavs}
 						minimizeTab={this.minimizeTab}
 						move={this.moveTab}
+						tabRefs={this.tabRefs}
 					/>
 				)}
 				{!this.state.showFavBar ? null : (
@@ -3561,7 +3660,7 @@ div:has(> div > #channelTabs-container) {
 	grid-template-rows: [top] auto [titleBarEnd] min-content [noticeEnd] 1fr [end];
 }
 
-${noDragClasses.map((x) => `.${x}`).join(", ")} {
+${noDragClasses.map((x) => `.${x}`).join(", ")}, [role="menu"] {
 	-webkit-app-region: no-drag;
 }
 
@@ -3770,7 +3869,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 	border-radius: 4px;
 	cursor: pointer;
 	color: var(--interactive-normal);
-	margin-right: 64px;
+	margin-right: 6px;
 }
 
 .channelTabs-newTab:hover {
@@ -3786,6 +3885,34 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 .channelTabs-closeTab:hover {
 	background: hsl(359,calc(var(--saturation-factor, 1)*82.6%),59.4%);
 	color: white;
+}
+
+.channelTabs-tabListDropdown {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	height: var(--channelTabs-openTabSize);
+	width: 24px;
+	margin: 0 64px 3px 0;
+	border-radius: 4px;
+	cursor: pointer;
+	color: var(--interactive-normal);
+}
+
+.channelTabs-tabListDropdown:hover {
+	background: var(--background-modifier-hover);
+	color: var(--interactive-hover);
+}
+
+.channelTabs-tabListDropdown:active {
+	background: var(--background-modifier-active);
+	color: var(--interactive-active);
+}
+
+.channelTabs-tabListDropdown svg {
+	width: 16px;
+	height: 16px;
 }
 
 /*
