@@ -1822,7 +1822,13 @@ const TabStatus = (props) => (
 );
 
 const TabName = (props) => (
-	<span className="channelTabs-tabName">{props.name}</span>
+	<Tooltip text={props.name}>
+		{(tooltipProps) => (
+			<span {...tooltipProps} className="channelTabs-tabName">
+				{props.name}
+			</span>
+		)}
+	</Tooltip>
 );
 
 const TabClose = (props) =>
