@@ -3332,6 +3332,7 @@ module.exports = class ChannelTabs {
 		this.loadSettings();
 		this.applyStyle();
 		this.ifNoTabsExist();
+		this.ifNoSelectedTab();
 		this.promises = {
 			state: { cancelled: false },
 			cancel() {
@@ -4102,6 +4103,11 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 					selected: true,
 				},
 			];
+	}
+
+	ifNoSelectedTab() {
+		if (!this.settings.tabs.some((tab) => tab.selected))
+			this.settings.tabs[0].selected = true;
 	}
 
 	ifReopenLastChannelDefault() {
