@@ -2617,61 +2617,33 @@ async function* animate(duration) {
 // This component allows users to smoothly scroll horizontally using the mouse wheel.
 function HorizontalScroll(props) {
 	const container = React.useRef(null);
+	let current = 0;
 	let target = 0;
-	let animationId = null;
-	let scrollTimeout = null;
 
 	function expDecay(a, b, decay, dt) {
 		return b + (a - b) * Math.exp((-decay * dt) / 1000);
 	}
 
 	let last = Date.now();
+	let resetLast = false;
 	function update() {
 		if (!container.current) return;
 
-		const before = container.current.scrollLeft;
-		container.current.scrollLeft = expDecay(
-			container.current.scrollLeft,
-			target,
-			10,
-			Date.now() - last,
-		);
+		current = expDecay(current, target, 10, Date.now() - last);
+		container.current.scrollLeft = current;
 		last = Date.now();
 
-		if (Math.abs(container.current.scrollLeft - target) > 1) {
-			animationId = requestAnimationFrame(update);
+		if (Math.abs(container.current.scrollLeft - target) > 0) {
+			requestAnimationFrame(update);
 		} else {
-			if (animationId) {
-				cancelAnimationFrame(animationId);
-				animationId = null;
-			}
+			resetLast = true;
 		}
 	}
-
-	React.useEffect(() => {
-		return () => {
-			if (animationId) {
-				cancelAnimationFrame(animationId);
-			}
-			if (scrollTimeout) {
-				clearTimeout(scrollTimeout);
-			}
-		};
-	}, []);
 
 	return (
 		<div
 			ref={container}
 			onWheel={async (event) => {
-				if (animationId) {
-					cancelAnimationFrame(animationId);
-					animationId = null;
-				}
-				if (scrollTimeout) {
-					clearTimeout(scrollTimeout);
-					scrollTimeout = null;
-				}
-
 				target += event.deltaY;
 				target = Math.max(
 					0,
@@ -2680,8 +2652,11 @@ function HorizontalScroll(props) {
 						container.current.scrollWidth - container.current.clientWidth,
 					),
 				);
+
+				if (resetLast) last = Date.now();
 				update();
 			}}
+			onScrollEnd={() => (current = container.current.scrollLeft)}
 			{...props}
 		>
 			{props.children}
@@ -2803,6 +2778,7 @@ const TabBar = (props) => (
 		{props.trailing}
 	</div>
 );
+
 const FavBar = (props) => (
 	<div
 		className={
