@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.7.7
+ * @version 2.8.0
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -31,6 +31,14 @@
 
 @else@*/
 const CHANGES = {
+	"2.8.0": {
+		improved: ["Add tooltip for tab name"],
+		fixed: [
+			"Fixed tab scrolling glitching out",
+			"Fixed plugin not starting under specific circumstances",
+		],
+		added: ["Added tab dropdown menu for improved navigation"],
+	},
 	"2.7.7": {
 		fixed: ["Fixed tab icons in compact mode"],
 	},
@@ -289,6 +297,23 @@ var Icons = {
 				d: "M8.3 3.3a1 1 0 0 0 0 1.4l7.29 7.3-7.3 7.3a1 1 0 1 0 1.42 1.4l8-8a1 1 0 0 0 0-1.4l-8-8a1 1 0 0 0-1.42 0Z",
 			}),
 		),
+	ChevronDownIcon: () =>
+		/* @__PURE__ */ React.createElement(
+			"svg",
+			{
+				"aria-hidden": "true",
+				role: "img",
+				xmlns: "http://www.w3.org/2000/svg",
+				width: "24",
+				height: "24",
+				fill: "none",
+				viewBox: "0 0 24 24",
+			},
+			/* @__PURE__ */ React.createElement("path", {
+				fill: "currentColor",
+				d: "M5.3 9.3a1 1 0 0 1 1.4 0l5.3 5.29 5.3-5.3a1 1 0 1 1 1.4 1.42l-6 6a1 1 0 0 1-1.4 0l-6-6a1 1 0 0 1 0-1.42Z",
+			}),
+		),
 };
 var Close =
 	Icons?.XSmallIcon ??
@@ -307,6 +332,9 @@ var LeftCaret =
 var RightCaret =
 	Icons?.ChevronLargeRightIcon ??
 	(() => /* @__PURE__ */ React.createElement("b", null, ">"));
+var ChevronDown =
+	Icons?.ChevronDownIcon ??
+	(() => /* @__PURE__ */ React.createElement("b", null, "\u25BC"));
 var DefaultUserIconGrey = "https://cdn.discordapp.com/embed/avatars/0.png";
 var SettingsMenuIcon = /* @__PURE__ */ React.createElement(
 	"svg",
@@ -876,6 +904,37 @@ function CreateFavBarContextMenu(props, e) {
 			align: "top",
 		},
 	);
+}
+function CreateTabListContextMenu(props, e) {
+	function wrapClose(name) {
+		return (...args) => {
+			props[name](...args);
+			ContextMenu.close();
+		};
+	}
+	const menuItems = props.tabs.map((tab, tabIndex) => ({
+		id: `tab-${tabIndex}`,
+		render: () =>
+			/* @__PURE__ */ React.createElement(Tab, {
+				...tab,
+				...{
+					unreadCount: UnreadStateStore.getUnreadCount(tab.channelId),
+					unreadEstimated: UnreadStateStore.isEstimated(tab.channelId),
+					hasUnread: UnreadStateStore.hasUnread(tab.channelId),
+					mentionCount: UnreadStateStore.getMentionCount(tab.channelId),
+					hasUsersTyping: isChannelTyping(tab.channelId),
+					currentStatus: getCurrentUserStatus(tab.url),
+				},
+				...props,
+				switchToTab: wrapClose("switchToTab"),
+				closeTab: wrapClose("closeTab"),
+				tabIndex,
+			}),
+	}));
+	ContextMenu.open(e, ContextMenu.buildMenu(menuItems), {
+		position: "bottom",
+		align: "left",
+	});
 }
 function CreateSettingsContextMenu(instance, e) {
 	ContextMenu.open(
@@ -1815,9 +1874,14 @@ var TabStatus = (props) =>
 	});
 var TabName = (props) =>
 	/* @__PURE__ */ React.createElement(
-		"span",
-		{ className: "channelTabs-tabName" },
-		props.name,
+		Tooltip,
+		{ text: props.name },
+		(tooltipProps) =>
+			/* @__PURE__ */ React.createElement(
+				"span",
+				{ ...tooltipProps, className: "channelTabs-tabName" },
+				props.name,
+			),
 	);
 var TabClose = (props) =>
 	props.tabCount < 2
@@ -2063,6 +2127,7 @@ var Tab = (props) =>
 				(props.minimized ? " channelTabs-minimized" : "") +
 				(props.hasUnread ? " channelTabs-unread" : "") +
 				(props.mentionCount > 0 ? " channelTabs-mention" : ""),
+			ref: props.ref,
 			"data-mention-count": props.mentionCount,
 			"data-unread-count": props.unreadCount,
 			"data-unread-estimated": props.unreadEstimated,
@@ -2361,6 +2426,16 @@ var NewTab = (props) =>
 		{ className: "channelTabs-newTab", onClick: props.openNewTab },
 		/* @__PURE__ */ React.createElement(PlusAlt, null),
 	);
+var TabListDropdown = (props) =>
+	/* @__PURE__ */ React.createElement(
+		"div",
+		{
+			className: "channelTabs-tabListDropdown",
+			onClick: (e) => CreateTabListContextMenu(props, e),
+			title: "Show all tabs",
+		},
+		/* @__PURE__ */ React.createElement(ChevronDown, null),
+	);
 var NoFavItemsPlaceholder = (props) =>
 	/* @__PURE__ */ React.createElement(
 		"span",
@@ -2601,21 +2676,22 @@ function closeCurrentTab() {
 }
 function HorizontalScroll(props) {
 	const container = React.useRef(null);
+	let current = 0;
 	let target = 0;
 	function expDecay(a, b, decay, dt) {
 		return b + (a - b) * Math.exp((-decay * dt) / 1e3);
 	}
 	let last = Date.now();
+	let resetLast = false;
 	function update() {
-		container.current.scrollLeft = expDecay(
-			container.current.scrollLeft,
-			target,
-			10,
-			Date.now() - last,
-		);
+		if (!container.current) return;
+		current = expDecay(current, target, 10, Date.now() - last);
+		container.current.scrollLeft = current;
 		last = Date.now();
-		if (Math.abs(container.current.scrollLeft - target) > 1) {
+		if (Math.abs(container.current.scrollLeft - target) > 0) {
 			requestAnimationFrame(update);
+		} else {
+			resetLast = true;
 		}
 	}
 	return /* @__PURE__ */ React.createElement(
@@ -2631,8 +2707,10 @@ function HorizontalScroll(props) {
 						container.current.scrollWidth - container.current.clientWidth,
 					),
 				);
+				if (resetLast) last = Date.now();
 				update();
 			},
+			onScrollEnd: () => (current = container.current.scrollLeft),
 			...props,
 		},
 		props.children,
@@ -2718,6 +2796,8 @@ var TabBar = (props) =>
 						}),
 					)((result) =>
 						/* @__PURE__ */ React.createElement(Tab, {
+							ref: (el) => (props.tabRefs.current[tabIndex] = el),
+							key: tabIndex,
 							switchToTab: props.switchToTab,
 							closeTab: props.closeTab,
 							addToFavs: props.addToFavs,
@@ -2761,6 +2841,7 @@ var TabBar = (props) =>
 		/* @__PURE__ */ React.createElement(NewTab, {
 			openNewTab: props.openNewTab,
 		}),
+		/* @__PURE__ */ React.createElement(TabListDropdown, { ...props }),
 		props.trailing,
 	);
 var FavBar = (props) =>
@@ -2845,6 +2926,8 @@ var TopBar = class TopBar2 extends React.Component {
 		this.openFavInNewTab = this.openFavInNewTab.bind(this);
 		this.openFavGroupInNewTab = this.openFavGroupInNewTab.bind(this);
 		this.hideFavBar = this.hideFavBar.bind(this);
+		this.tabRefs = React.createRef();
+		this.tabRefs.current = [];
 	}
 	//#endregion
 	//#region Tab Functions
@@ -2876,6 +2959,7 @@ var TopBar = class TopBar2 extends React.Component {
 			},
 			this.props.plugin.saveSettings,
 		);
+		this.tabRefs.current[tabIndex].scrollIntoView({ behavior: "smooth" });
 		switching = true;
 		NavigationUtils.transitionTo(this.state.tabs[tabIndex].url);
 		switching = false;
@@ -3292,6 +3376,7 @@ var TopBar = class TopBar2 extends React.Component {
 						addToFavs: this.addToFavs,
 						minimizeTab: this.minimizeTab,
 						move: this.moveTab,
+						tabRefs: this.tabRefs,
 					}),
 			!this.state.showFavBar
 				? null
@@ -3343,6 +3428,7 @@ module.exports = class ChannelTabs {
 		this.loadSettings();
 		this.applyStyle();
 		this.ifNoTabsExist();
+		this.ifNoSelectedTab();
 		this.promises = {
 			state: { cancelled: false },
 			cancel() {
@@ -3555,7 +3641,7 @@ div:has(> div > #channelTabs-container) {
 	grid-template-rows: [top] auto [titleBarEnd] min-content [noticeEnd] 1fr [end];
 }
 
-${noDragClasses.map((x) => `.${x}`).join(", ")} {
+${noDragClasses.map((x) => `.${x}`).join(", ")}, [role="menu"] {
 	-webkit-app-region: no-drag;
 }
 
@@ -3764,7 +3850,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 	border-radius: 4px;
 	cursor: pointer;
 	color: var(--interactive-normal);
-	margin-right: 64px;
+	margin-right: 6px;
 }
 
 .channelTabs-newTab:hover {
@@ -3780,6 +3866,34 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 .channelTabs-closeTab:hover {
 	background: hsl(359,calc(var(--saturation-factor, 1)*82.6%),59.4%);
 	color: white;
+}
+
+.channelTabs-tabListDropdown {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	height: var(--channelTabs-openTabSize);
+	width: 24px;
+	margin: 0 64px 3px 0;
+	border-radius: 4px;
+	cursor: pointer;
+	color: var(--interactive-normal);
+}
+
+.channelTabs-tabListDropdown:hover {
+	background: var(--background-modifier-hover);
+	color: var(--interactive-hover);
+}
+
+.channelTabs-tabListDropdown:active {
+	background: var(--background-modifier-active);
+	color: var(--interactive-active);
+}
+
+.channelTabs-tabListDropdown svg {
+	width: 16px;
+	height: 16px;
 }
 
 /*
@@ -4092,6 +4206,10 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 					selected: true,
 				},
 			];
+	}
+	ifNoSelectedTab() {
+		if (!this.settings.tabs.some((tab) => tab.selected))
+			this.settings.tabs[0].selected = true;
 	}
 	ifReopenLastChannelDefault() {
 		if (this.settings.reopenLastChannel) {
