@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.8.1
+ * @version 2.8.2
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -31,6 +31,9 @@
 
 @else@*/
 const CHANGES = {
+	"2.8.2": {
+		fixed: ["Fixed title covering favorites"],
+	},
 	"2.8.1": {
 		fixed: [
 			"Fixed title covering tabs",
@@ -2890,7 +2893,6 @@ var FavBar = (props) =>
 				CreateFavBarContextMenu(props, e);
 			},
 		},
-		props.leading,
 		/* @__PURE__ */ React.createElement(FavFolders, { ...props }),
 		props.favs.length > 0
 			? /* @__PURE__ */ React.createElement(FavItems, { group: null, ...props })
