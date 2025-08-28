@@ -968,6 +968,24 @@ function CreateSettingsContextMenu(instance, e) {
 									},
 								},
 								{
+									label: "Wrap Tabs",
+									type: "toggle",
+									id: "wrapTabs",
+									checked: () => TopBarRef.current.state.wrapTabs,
+									action: () => {
+										instance.setState(
+											{
+												wrapTabs: !instance.state.wrapTabs,
+											},
+											() => {
+												instance.props.plugin.settings.wrapTabs =
+													!instance.props.plugin.settings.wrapTabs;
+												instance.props.plugin.saveSettings();
+											},
+										);
+									},
+								},
+								{
 									label: "Privacy Mode",
 									type: "toggle",
 									id: "privacyMode",
@@ -2719,6 +2737,7 @@ const TabBar = (props) => (
 				display: "flex",
 				overflowX: "auto",
 				scrollbarWidth: "none",
+				flexWrap: props.wrapTabs ? "wrap" : "nowrap",
 			}}
 		>
 			{props.tabs.map((tab, tabIndex) =>
@@ -2844,6 +2863,7 @@ const TopBar = class TopBar extends React.Component {
 			showEmptyFavGroupBadges: props.showEmptyFavGroupBadges,
 			addFavGroup: props.addFavGroup,
 			compactStyle: props.compactStyle,
+			wrapTabs: props.wrapTabs,
 			showQuickSettings: props.showQuickSettings,
 			showNavButtons: props.showNavButtons,
 			alwaysFocusNewTabs: props.alwaysFocusNewTabs,
@@ -3338,6 +3358,7 @@ const TopBar = class TopBar extends React.Component {
 						showActiveTabTypingBadge={this.state.showActiveTabTypingBadge}
 						showEmptyActiveTabBadges={this.state.showEmptyActiveTabBadges}
 						compactStyle={this.state.compactStyle}
+						wrapTabs={this.state.wrapTabs}
 						privacyMode={this.state.privacyMode}
 						radialStatusMode={this.state.radialStatusMode}
 						tabWidthMin={this.state.tabWidthMin}
@@ -4267,6 +4288,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 					showFavGroupTypingBadge={this.settings.showFavGroupTypingBadge}
 					showEmptyFavGroupBadges={this.settings.showEmptyFavGroupBadges}
 					compactStyle={this.settings.compactStyle}
+					wrapTabs={this.settings.wrapTabs}
 					privacyMode={this.settings.privacyMode}
 					radialStatusMode={this.settings.radialStatusMode}
 					tabWidthMin={this.settings.tabWidthMin}
@@ -4685,6 +4707,21 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 									});
 								this.removeStyle();
 								this.applyStyle();
+								this.saveSettings();
+							},
+						},
+						{
+							id: "wrapTabs",
+							type: "switch",
+							name: "Wrap Tabs",
+							note: "Enables wrapping of tabs to the next line when they overflow",
+							value: this.settings.wrapTabs,
+							onChange: (checked) => {
+								this.settings.wrapTabs = checked;
+								if (TopBarRef.current)
+									TopBarRef.current.setState({
+										wrapTabs: checked,
+									});
 								this.saveSettings();
 							},
 						},
