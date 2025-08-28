@@ -864,709 +864,718 @@ function CreateTabListContextMenu(props, e) {
 function CreateSettingsContextMenu(instance, e) {
 	ContextMenu.open(
 		e,
-		ContextMenu.buildMenu([
-			{
-				type: "group",
-				items: mergeLists({
-					values: [
-						{
-							label: pluginMeta.name,
-							subtext: "Version " + pluginMeta.version,
-							// action: () => {
-							// 	UI.showChangelogModal(
-							// 		pluginMeta.name,
-							// 		pluginMeta.version,
-							// 		config.changelog,
-							// 	);
-							// },
-						},
-						{
-							type: "separator",
-						},
-						{
-							id: "shortcutLabel",
-							disabled: true,
-							label: "Shortcuts:",
-						},
-						{
-							id: "shortcutLabelKeys",
-							disabled: true,
-							render: () => {
-								return (
-									<div
-										style={{
-											color: "var(--text-muted)",
-											padding: "8px",
-											"font-size": "12px",
-											"white-space": "pre-wrap",
-										}}
-									>
-										{`Ctrl + W - Close Current Tab\n` +
-											`Ctrl + PgUp - Navigate to Left Tab\n` +
-											`Ctrl + PgDn - Navigate to Right Tab\n`}
-									</div>
-								);
+		// The menu needs to be wrapped in a component to allow toggles to update properly.
+		(props) =>
+			ContextMenu.buildMenu([
+				{
+					type: "group",
+					items: mergeLists({
+						values: [
+							{
+								label: pluginMeta.name,
+								subtext: "Version " + pluginMeta.version,
+								// action: () => {
+								// 	UI.showChangelogModal(
+								// 		pluginMeta.name,
+								// 		pluginMeta.version,
+								// 		config.changelog,
+								// 	);
+								// },
 							},
-						},
-						{
-							type: "separator",
-						},
-						{
-							label: "Settings:",
-							id: "settingHeader",
-							disabled: true,
-						},
-						{
-							type: "separator",
-						},
-						{
-							type: "submenu",
-							label: "Startup",
-							items: [
-								{
-									label: "Reopen Last Channel on Startup",
-									type: "toggle",
-									id: "reopenLastChannel",
-									checked: () => TopBarRef.current.state.reopenLastChannel,
-									action: () => {
-										instance.setState(
-											{
-												reopenLastChannel: !instance.state.reopenLastChannel,
-											},
-											() => {
-												instance.props.plugin.settings.reopenLastChannel =
-													!instance.props.plugin.settings.reopenLastChannel;
-												instance.props.plugin.saveSettings();
-											},
-										);
+							{
+								type: "separator",
+							},
+							{
+								id: "shortcutLabel",
+								disabled: true,
+								label: "Shortcuts:",
+							},
+							{
+								id: "shortcutLabelKeys",
+								disabled: true,
+								render: () => {
+									return (
+										<div
+											style={{
+												color: "var(--text-muted)",
+												padding: "8px",
+												"font-size": "12px",
+												"white-space": "pre-wrap",
+											}}
+										>
+											{`Ctrl + W - Close Current Tab\n` +
+												`Ctrl + PgUp - Navigate to Left Tab\n` +
+												`Ctrl + PgDn - Navigate to Right Tab\n`}
+										</div>
+									);
+								},
+							},
+							{
+								type: "separator",
+							},
+							{
+								label: "Settings:",
+								id: "settingHeader",
+								disabled: true,
+							},
+							{
+								type: "separator",
+							},
+							{
+								type: "submenu",
+								label: "Startup",
+								items: [
+									{
+										label: "Reopen Last Channel on Startup",
+										type: "toggle",
+										id: "reopenLastChannel",
+										checked: () => TopBarRef.current.state.reopenLastChannel,
+										action: () => {
+											instance.setState(
+												{
+													reopenLastChannel: !instance.state.reopenLastChannel,
+												},
+												() => {
+													instance.props.plugin.settings.reopenLastChannel =
+														!instance.props.plugin.settings.reopenLastChannel;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-							],
-						},
-						{
-							type: "submenu",
-							label: "Appearance",
-							items: [
-								{
-									label: "Use Compact Appearance",
-									type: "toggle",
-									id: "useCompactLook",
-									checked: () => TopBarRef.current.state.compactStyle,
-									action: () => {
-										instance.setState(
-											{
-												compactStyle: !instance.state.compactStyle,
-											},
-											() => {
-												instance.props.plugin.settings.compactStyle =
-													!instance.props.plugin.settings.compactStyle;
-												instance.props.plugin.removeStyle();
-												instance.props.plugin.applyStyle();
-												instance.props.plugin.saveSettings();
-											},
-										);
+								],
+							},
+							{
+								type: "submenu",
+								label: "Appearance",
+								items: [
+									{
+										label: "Use Compact Appearance",
+										type: "toggle",
+										id: "useCompactLook",
+										checked: () => TopBarRef.current.state.compactStyle,
+										action: () => {
+											instance.setState(
+												{
+													compactStyle: !instance.state.compactStyle,
+												},
+												() => {
+													instance.props.plugin.settings.compactStyle =
+														!instance.props.plugin.settings.compactStyle;
+													instance.props.plugin.removeStyle();
+													instance.props.plugin.applyStyle();
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Wrap Tabs",
-									type: "toggle",
-									id: "wrapTabs",
-									checked: () => TopBarRef.current.state.wrapTabs,
-									action: () => {
-										instance.setState(
-											{
-												wrapTabs: !instance.state.wrapTabs,
-											},
-											() => {
-												instance.props.plugin.settings.wrapTabs =
-													!instance.props.plugin.settings.wrapTabs;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Wrap Tabs",
+										type: "toggle",
+										id: "wrapTabs",
+										checked: () => TopBarRef.current.state.wrapTabs,
+										action: () => {
+											instance.setState(
+												{
+													wrapTabs: !instance.state.wrapTabs,
+												},
+												() => {
+													instance.props.plugin.settings.wrapTabs =
+														!instance.props.plugin.settings.wrapTabs;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Privacy Mode",
-									type: "toggle",
-									id: "privacyMode",
-									checked: () => TopBarRef.current.state.privacyMode,
-									action: () => {
-										instance.setState(
-											{
-												privacyMode: !instance.state.privacyMode,
-											},
-											() => {
-												instance.props.plugin.settings.privacyMode =
-													!instance.props.plugin.settings.privacyMode;
-												instance.props.plugin.removeStyle();
-												instance.props.plugin.applyStyle();
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Privacy Mode",
+										type: "toggle",
+										id: "privacyMode",
+										checked: () => TopBarRef.current.state.privacyMode,
+										action: () => {
+											instance.setState(
+												{
+													privacyMode: !instance.state.privacyMode,
+												},
+												() => {
+													instance.props.plugin.settings.privacyMode =
+														!instance.props.plugin.settings.privacyMode;
+													instance.props.plugin.removeStyle();
+													instance.props.plugin.applyStyle();
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Radial Status Indicators",
-									type: "toggle",
-									id: "radialStatusMode",
-									checked: () => TopBarRef.current.state.radialStatusMode,
-									action: () => {
-										instance.setState(
-											{
-												radialStatusMode: !instance.state.radialStatusMode,
-											},
-											() => {
-												instance.props.plugin.settings.radialStatusMode =
-													!instance.props.plugin.settings.radialStatusMode;
-												instance.props.plugin.removeStyle();
-												instance.props.plugin.applyStyle();
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Radial Status Indicators",
+										type: "toggle",
+										id: "radialStatusMode",
+										checked: () => TopBarRef.current.state.radialStatusMode,
+										action: () => {
+											instance.setState(
+												{
+													radialStatusMode: !instance.state.radialStatusMode,
+												},
+												() => {
+													instance.props.plugin.settings.radialStatusMode =
+														!instance.props.plugin.settings.radialStatusMode;
+													instance.props.plugin.removeStyle();
+													instance.props.plugin.applyStyle();
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									type: "separator",
-								},
-								{
-									label: "Minimum Tab Width",
-									style: { "pointer-events": "none" },
-								},
-								{
-									id: "tabWidthMin",
-									render: () => {
-										return (
-											<div className="channelTabs-sliderContainer">
-												<Slider
-													aria-label="Minimum Tab Width"
-													className="channelTabs-slider"
-													mini={true}
-													orientation="horizontal"
-													disabled={false}
-													initialValue={
-														instance.props.plugin.settings.tabWidthMin
-													}
-													minValue={50}
-													maxValue={220}
-													onValueRender={(value) =>
-														Math.floor(value / 10) * 10 + "px"
-													}
-													onValueChange={(value) => {
-														(value = Math.floor(value / 10) * 10),
-															(instance.props.plugin.settings.tabWidthMin =
-																value),
-															instance.props.plugin.saveSettings(),
-															instance.props.plugin.applyStyle(
-																"channelTabs-style-constants",
-															);
-													}}
-												/>
-											</div>
-										);
+									{
+										type: "separator",
 									},
-								},
-								{
-									type: "separator",
-								},
-								{
-									label: "Show Tab Bar",
-									type: "toggle",
-									id: "showTabBar",
-									color: "danger",
-									checked: () => TopBarRef.current.state.showTabBar,
-									action: () => {
-										instance.setState(
-											{
-												showTabBar: !instance.state.showTabBar,
-											},
-											() => {
-												instance.props.plugin.settings.showTabBar =
-													!instance.props.plugin.settings.showTabBar;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Minimum Tab Width",
+										style: { "pointer-events": "none" },
 									},
-								},
-								{
-									label: "Show Fav Bar",
-									type: "toggle",
-									id: "showFavBar",
-									color: "danger",
-									checked: () => TopBarRef.current.state.showFavBar,
-									action: () => {
-										instance.setState(
-											{
-												showFavBar: !instance.state.showFavBar,
-											},
-											() => {
-												instance.props.plugin.settings.showFavBar =
-													!instance.props.plugin.settings.showFavBar;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										id: "tabWidthMin",
+										render: () => {
+											return (
+												<div className="channelTabs-sliderContainer">
+													<Slider
+														aria-label="Minimum Tab Width"
+														className="channelTabs-slider"
+														mini={true}
+														orientation="horizontal"
+														disabled={false}
+														initialValue={
+															instance.props.plugin.settings.tabWidthMin
+														}
+														minValue={50}
+														maxValue={220}
+														onValueRender={(value) =>
+															Math.floor(value / 10) * 10 + "px"
+														}
+														onValueChange={(value) => {
+															(value = Math.floor(value / 10) * 10),
+																(instance.props.plugin.settings.tabWidthMin =
+																	value),
+																instance.props.plugin.saveSettings(),
+																instance.props.plugin.applyStyle(
+																	"channelTabs-style-constants",
+																);
+														}}
+													/>
+												</div>
+											);
+										},
 									},
-								},
-								{
-									label: "Show Quick Settings",
-									type: "toggle",
-									id: "showQuickSettings",
-									color: "danger",
-									checked: () => TopBarRef.current.state.showQuickSettings,
-									action: () => {
-										instance.setState(
-											{
-												showQuickSettings: !instance.state.showQuickSettings,
-											},
-											() => {
-												instance.props.plugin.settings.showQuickSettings =
-													!instance.props.plugin.settings.showQuickSettings;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										type: "separator",
 									},
-								},
-								{
-									label: "Show Navigation Buttons",
-									type: "toggle",
-									id: "showNavButtons",
-									checked: () => TopBarRef.current.state.showNavButtons,
-									action: () => {
-										instance.setState(
-											{
-												showNavButtons: !instance.state.showNavButtons,
-											},
-											() => {
-												instance.props.plugin.settings.showNavButtons =
-													!instance.props.plugin.settings.showNavButtons;
-												instance.props.plugin.removeStyle();
-												instance.props.plugin.applyStyle();
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Show Tab Bar",
+										type: "toggle",
+										id: "showTabBar",
+										color: "danger",
+										checked: () => TopBarRef.current.state.showTabBar,
+										action: () => {
+											instance.setState(
+												{
+													showTabBar: !instance.state.showTabBar,
+												},
+												() => {
+													instance.props.plugin.settings.showTabBar =
+														!instance.props.plugin.settings.showTabBar;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-							],
-						},
-						{
-							type: "submenu",
-							label: "Behavior",
-							items: [
-								{
-									label: "Always Focus New Tabs",
-									type: "toggle",
-									id: "alwaysFocusNewTabs",
-									checked: () => TopBarRef.current.state.alwaysFocusNewTabs,
-									action: () => {
-										instance.setState(
-											{
-												alwaysFocusNewTabs: !instance.state.alwaysFocusNewTabs,
-											},
-											() => {
-												instance.props.plugin.settings.alwaysFocusNewTabs =
-													!instance.props.plugin.settings.alwaysFocusNewTabs;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Show Fav Bar",
+										type: "toggle",
+										id: "showFavBar",
+										color: "danger",
+										checked: () => TopBarRef.current.state.showFavBar,
+										action: () => {
+											instance.setState(
+												{
+													showFavBar: !instance.state.showFavBar,
+												},
+												() => {
+													instance.props.plugin.settings.showFavBar =
+														!instance.props.plugin.settings.showFavBar;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Primary Forward/Back Navigation",
-									type: "toggle",
-									id: "useStandardNav",
-									checked: () => TopBarRef.current.state.useStandardNav,
-									action: () => {
-										instance.setState(
-											{
-												useStandardNav: !instance.state.useStandardNav,
-											},
-											() => {
-												instance.props.plugin.settings.useStandardNav =
-													!instance.props.plugin.settings.useStandardNav;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Show Quick Settings",
+										type: "toggle",
+										id: "showQuickSettings",
+										color: "danger",
+										checked: () => TopBarRef.current.state.showQuickSettings,
+										action: () => {
+											instance.setState(
+												{
+													showQuickSettings: !instance.state.showQuickSettings,
+												},
+												() => {
+													instance.props.plugin.settings.showQuickSettings =
+														!instance.props.plugin.settings.showQuickSettings;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-							],
-						},
-						{
-							type: "submenu",
-							label: "Badge Visibility",
-							items: [
-								{
-									type: "separator",
-									id: "header1_1",
-								},
-								{
-									label: "Favs:",
-									id: "header1_2",
-									disabled: true,
-								},
-								{
-									type: "separator",
-									id: "header1_3",
-								},
-								{
-									label: "Show Mentions",
-									type: "toggle",
-									id: "favs_Mentions",
-									checked: () => TopBarRef.current.state.showFavMentionBadges,
-									action: () => {
-										instance.setState(
-											{
-												showFavMentionBadges:
-													!instance.state.showFavMentionBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showFavMentionBadges =
-													!instance.props.plugin.settings.showFavMentionBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Show Navigation Buttons",
+										type: "toggle",
+										id: "showNavButtons",
+										checked: () => TopBarRef.current.state.showNavButtons,
+										action: () => {
+											instance.setState(
+												{
+													showNavButtons: !instance.state.showNavButtons,
+												},
+												() => {
+													instance.props.plugin.settings.showNavButtons =
+														!instance.props.plugin.settings.showNavButtons;
+													instance.props.plugin.removeStyle();
+													instance.props.plugin.applyStyle();
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Show Unreads",
-									type: "toggle",
-									id: "favs_Unreads",
-									checked: () => TopBarRef.current.state.showFavUnreadBadges,
-									action: () => {
-										instance.setState(
-											{
-												showFavUnreadBadges:
-													!instance.state.showFavUnreadBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showFavUnreadBadges =
-													!instance.props.plugin.settings.showFavUnreadBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+								],
+							},
+							{
+								type: "submenu",
+								label: "Behavior",
+								items: [
+									{
+										label: "Always Focus New Tabs",
+										type: "toggle",
+										id: "alwaysFocusNewTabs",
+										checked: () => TopBarRef.current.state.alwaysFocusNewTabs,
+										action: () => {
+											instance.setState(
+												{
+													alwaysFocusNewTabs:
+														!instance.state.alwaysFocusNewTabs,
+												},
+												() => {
+													instance.props.plugin.settings.alwaysFocusNewTabs =
+														!instance.props.plugin.settings.alwaysFocusNewTabs;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Show Typing",
-									type: "toggle",
-									id: "favs_Typing",
-									checked: () => TopBarRef.current.state.showFavTypingBadge,
-									action: () => {
-										instance.setState(
-											{
-												showFavTypingBadge: !instance.state.showFavTypingBadge,
-											},
-											() => {
-												instance.props.plugin.settings.showFavTypingBadge =
-													!instance.props.plugin.settings.showFavTypingBadge;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Primary Forward/Back Navigation",
+										type: "toggle",
+										id: "useStandardNav",
+										checked: () => TopBarRef.current.state.useStandardNav,
+										action: () => {
+											instance.setState(
+												{
+													useStandardNav: !instance.state.useStandardNav,
+												},
+												() => {
+													instance.props.plugin.settings.useStandardNav =
+														!instance.props.plugin.settings.useStandardNav;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Show Empty Mentions/Unreads",
-									type: "toggle",
-									id: "favs_Empty",
-									checked: () => TopBarRef.current.state.showEmptyFavBadges,
-									action: () => {
-										instance.setState(
-											{
-												showEmptyFavBadges: !instance.state.showEmptyFavBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showEmptyFavBadges =
-													!instance.props.plugin.settings.showEmptyFavBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+								],
+							},
+							{
+								type: "submenu",
+								label: "Badge Visibility",
+								items: [
+									{
+										type: "separator",
+										id: "header1_1",
 									},
-								},
-								{
-									type: "separator",
-									id: "header4_1",
-								},
-								{
-									label: "Fav Groups:",
-									id: "header4_2",
-									disabled: true,
-								},
-								{
-									type: "separator",
-									id: "header4_3",
-								},
-								{
-									label: "Show Mentions",
-									type: "toggle",
-									id: "favGroups_Mentions",
-									checked: () =>
-										TopBarRef.current.state.showFavGroupMentionBadges,
-									action: () => {
-										instance.setState(
-											{
-												showFavGroupMentionBadges:
-													!instance.state.showFavGroupMentionBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showFavGroupMentionBadges =
-													!instance.props.plugin.settings
-														.showFavGroupMentionBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Favs:",
+										id: "header1_2",
+										disabled: true,
 									},
-								},
-								{
-									label: "Show Unreads",
-									type: "toggle",
-									id: "favGroups_Unreads",
-									checked: () =>
-										TopBarRef.current.state.showFavGroupUnreadBadges,
-									action: () => {
-										instance.setState(
-											{
-												showFavGroupUnreadBadges:
-													!instance.state.showFavGroupUnreadBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showFavGroupUnreadBadges =
-													!instance.props.plugin.settings
-														.showFavGroupUnreadBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										type: "separator",
+										id: "header1_3",
 									},
-								},
-								{
-									label: "Show Typing",
-									type: "toggle",
-									id: "favGroups_Typing",
-									checked: () =>
-										TopBarRef.current.state.showFavGroupTypingBadge,
-									action: () => {
-										instance.setState(
-											{
-												showFavGroupTypingBadge:
-													!instance.state.showFavGroupTypingBadge,
-											},
-											() => {
-												instance.props.plugin.settings.showFavGroupTypingBadge =
-													!instance.props.plugin.settings
-														.showFavGroupTypingBadge;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Show Mentions",
+										type: "toggle",
+										id: "favs_Mentions",
+										checked: () => TopBarRef.current.state.showFavMentionBadges,
+										action: () => {
+											instance.setState(
+												{
+													showFavMentionBadges:
+														!instance.state.showFavMentionBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showFavMentionBadges =
+														!instance.props.plugin.settings
+															.showFavMentionBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Show Empty Mentions/Unreads",
-									type: "toggle",
-									id: "favGroups_Empty",
-									checked: () =>
-										TopBarRef.current.state.showEmptyFavGroupBadges,
-									action: () => {
-										instance.setState(
-											{
-												showEmptyFavGroupBadges:
-													!instance.state.showEmptyFavGroupBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showEmptyFavGroupBadges =
-													!instance.props.plugin.settings
-														.showEmptyFavGroupBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Show Unreads",
+										type: "toggle",
+										id: "favs_Unreads",
+										checked: () => TopBarRef.current.state.showFavUnreadBadges,
+										action: () => {
+											instance.setState(
+												{
+													showFavUnreadBadges:
+														!instance.state.showFavUnreadBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showFavUnreadBadges =
+														!instance.props.plugin.settings.showFavUnreadBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									type: "separator",
-									id: "header2_1",
-								},
-								{
-									label: "Tabs:",
-									id: "header2_2",
-									disabled: true,
-								},
-								{
-									type: "separator",
-									id: "header2_3",
-								},
-								{
-									label: "Show Mentions",
-									type: "toggle",
-									id: "tabs_Mentions",
-									checked: () => TopBarRef.current.state.showTabMentionBadges,
-									action: () => {
-										instance.setState(
-											{
-												showTabMentionBadges:
-													!instance.state.showTabMentionBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showTabMentionBadges =
-													!instance.props.plugin.settings.showTabMentionBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Show Typing",
+										type: "toggle",
+										id: "favs_Typing",
+										checked: () => TopBarRef.current.state.showFavTypingBadge,
+										action: () => {
+											instance.setState(
+												{
+													showFavTypingBadge:
+														!instance.state.showFavTypingBadge,
+												},
+												() => {
+													instance.props.plugin.settings.showFavTypingBadge =
+														!instance.props.plugin.settings.showFavTypingBadge;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Show Unreads",
-									type: "toggle",
-									id: "tabs_Unreads",
-									checked: () => TopBarRef.current.state.showTabUnreadBadges,
-									action: () => {
-										instance.setState(
-											{
-												showTabUnreadBadges:
-													!instance.state.showTabUnreadBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showTabUnreadBadges =
-													!instance.props.plugin.settings.showTabUnreadBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Show Empty Mentions/Unreads",
+										type: "toggle",
+										id: "favs_Empty",
+										checked: () => TopBarRef.current.state.showEmptyFavBadges,
+										action: () => {
+											instance.setState(
+												{
+													showEmptyFavBadges:
+														!instance.state.showEmptyFavBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showEmptyFavBadges =
+														!instance.props.plugin.settings.showEmptyFavBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Show Typing",
-									type: "toggle",
-									id: "tabs_Typing",
-									checked: () => TopBarRef.current.state.showTabTypingBadge,
-									action: () => {
-										instance.setState(
-											{
-												showTabTypingBadge: !instance.state.showTabTypingBadge,
-											},
-											() => {
-												instance.props.plugin.settings.showTabTypingBadge =
-													!instance.props.plugin.settings.showTabTypingBadge;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										type: "separator",
+										id: "header4_1",
 									},
-								},
-								{
-									label: "Show Empty Mentions/Unreads",
-									type: "toggle",
-									id: "tabs_Empty",
-									checked: () => TopBarRef.current.state.showEmptyTabBadges,
-									action: () => {
-										instance.setState(
-											{
-												showEmptyTabBadges: !instance.state.showEmptyTabBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showEmptyTabBadges =
-													!instance.props.plugin.settings.showEmptyTabBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Fav Groups:",
+										id: "header4_2",
+										disabled: true,
 									},
-								},
-								{
-									type: "separator",
-									id: "header3_1",
-								},
-								{
-									label: "Active Tabs:",
-									id: "header3_2",
-									disabled: true,
-								},
-								{
-									type: "separator",
-									id: "header3_3",
-								},
-								{
-									label: "Show Mentions",
-									type: "toggle",
-									id: "activeTabs_Mentions",
-									checked: () =>
-										TopBarRef.current.state.showActiveTabMentionBadges,
-									action: () => {
-										instance.setState(
-											{
-												showActiveTabMentionBadges:
-													!instance.state.showActiveTabMentionBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showActiveTabMentionBadges =
-													!instance.props.plugin.settings
-														.showActiveTabMentionBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										type: "separator",
+										id: "header4_3",
 									},
-								},
-								{
-									label: "Show Unreads",
-									type: "toggle",
-									id: "activeTabs_Unreads",
-									checked: () =>
-										TopBarRef.current.state.showActiveTabUnreadBadges,
-									action: () => {
-										instance.setState(
-											{
-												showActiveTabUnreadBadges:
-													!instance.state.showActiveTabUnreadBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showActiveTabUnreadBadges =
-													!instance.props.plugin.settings
-														.showActiveTabUnreadBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Show Mentions",
+										type: "toggle",
+										id: "favGroups_Mentions",
+										checked: () =>
+											TopBarRef.current.state.showFavGroupMentionBadges,
+										action: () => {
+											instance.setState(
+												{
+													showFavGroupMentionBadges:
+														!instance.state.showFavGroupMentionBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showFavGroupMentionBadges =
+														!instance.props.plugin.settings
+															.showFavGroupMentionBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Show Typing",
-									type: "toggle",
-									id: "activeTabs_Typing",
-									checked: () =>
-										TopBarRef.current.state.showActiveTabTypingBadge,
-									action: () => {
-										instance.setState(
-											{
-												showActiveTabTypingBadge:
-													!instance.state.showActiveTabTypingBadge,
-											},
-											() => {
-												instance.props.plugin.settings.showActiveTabTypingBadge =
-													!instance.props.plugin.settings
-														.showActiveTabTypingBadge;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Show Unreads",
+										type: "toggle",
+										id: "favGroups_Unreads",
+										checked: () =>
+											TopBarRef.current.state.showFavGroupUnreadBadges,
+										action: () => {
+											instance.setState(
+												{
+													showFavGroupUnreadBadges:
+														!instance.state.showFavGroupUnreadBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showFavGroupUnreadBadges =
+														!instance.props.plugin.settings
+															.showFavGroupUnreadBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-								{
-									label: "Show Empty Mentions/Unreads",
-									type: "toggle",
-									id: "activeTabs_Empty",
-									checked: () =>
-										TopBarRef.current.state.showEmptyActiveTabBadges,
-									action: () => {
-										instance.setState(
-											{
-												showEmptyActiveTabBadges:
-													!instance.state.showEmptyActiveTabBadges,
-											},
-											() => {
-												instance.props.plugin.settings.showEmptyActiveTabBadges =
-													!instance.props.plugin.settings
-														.showEmptyActiveTabBadges;
-												instance.props.plugin.saveSettings();
-											},
-										);
+									{
+										label: "Show Typing",
+										type: "toggle",
+										id: "favGroups_Typing",
+										checked: () =>
+											TopBarRef.current.state.showFavGroupTypingBadge,
+										action: () => {
+											instance.setState(
+												{
+													showFavGroupTypingBadge:
+														!instance.state.showFavGroupTypingBadge,
+												},
+												() => {
+													instance.props.plugin.settings.showFavGroupTypingBadge =
+														!instance.props.plugin.settings
+															.showFavGroupTypingBadge;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
 									},
-								},
-							],
-						},
-					],
-				}),
-			},
-		]),
+									{
+										label: "Show Empty Mentions/Unreads",
+										type: "toggle",
+										id: "favGroups_Empty",
+										checked: () =>
+											TopBarRef.current.state.showEmptyFavGroupBadges,
+										action: () => {
+											instance.setState(
+												{
+													showEmptyFavGroupBadges:
+														!instance.state.showEmptyFavGroupBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showEmptyFavGroupBadges =
+														!instance.props.plugin.settings
+															.showEmptyFavGroupBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
+									},
+									{
+										type: "separator",
+										id: "header2_1",
+									},
+									{
+										label: "Tabs:",
+										id: "header2_2",
+										disabled: true,
+									},
+									{
+										type: "separator",
+										id: "header2_3",
+									},
+									{
+										label: "Show Mentions",
+										type: "toggle",
+										id: "tabs_Mentions",
+										checked: () => TopBarRef.current.state.showTabMentionBadges,
+										action: () => {
+											instance.setState(
+												{
+													showTabMentionBadges:
+														!instance.state.showTabMentionBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showTabMentionBadges =
+														!instance.props.plugin.settings
+															.showTabMentionBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
+									},
+									{
+										label: "Show Unreads",
+										type: "toggle",
+										id: "tabs_Unreads",
+										checked: () => TopBarRef.current.state.showTabUnreadBadges,
+										action: () => {
+											instance.setState(
+												{
+													showTabUnreadBadges:
+														!instance.state.showTabUnreadBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showTabUnreadBadges =
+														!instance.props.plugin.settings.showTabUnreadBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
+									},
+									{
+										label: "Show Typing",
+										type: "toggle",
+										id: "tabs_Typing",
+										checked: () => TopBarRef.current.state.showTabTypingBadge,
+										action: () => {
+											instance.setState(
+												{
+													showTabTypingBadge:
+														!instance.state.showTabTypingBadge,
+												},
+												() => {
+													instance.props.plugin.settings.showTabTypingBadge =
+														!instance.props.plugin.settings.showTabTypingBadge;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
+									},
+									{
+										label: "Show Empty Mentions/Unreads",
+										type: "toggle",
+										id: "tabs_Empty",
+										checked: () => TopBarRef.current.state.showEmptyTabBadges,
+										action: () => {
+											instance.setState(
+												{
+													showEmptyTabBadges:
+														!instance.state.showEmptyTabBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showEmptyTabBadges =
+														!instance.props.plugin.settings.showEmptyTabBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
+									},
+									{
+										type: "separator",
+										id: "header3_1",
+									},
+									{
+										label: "Active Tabs:",
+										id: "header3_2",
+										disabled: true,
+									},
+									{
+										type: "separator",
+										id: "header3_3",
+									},
+									{
+										label: "Show Mentions",
+										type: "toggle",
+										id: "activeTabs_Mentions",
+										checked: () =>
+											TopBarRef.current.state.showActiveTabMentionBadges,
+										action: () => {
+											instance.setState(
+												{
+													showActiveTabMentionBadges:
+														!instance.state.showActiveTabMentionBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showActiveTabMentionBadges =
+														!instance.props.plugin.settings
+															.showActiveTabMentionBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
+									},
+									{
+										label: "Show Unreads",
+										type: "toggle",
+										id: "activeTabs_Unreads",
+										checked: () =>
+											TopBarRef.current.state.showActiveTabUnreadBadges,
+										action: () => {
+											instance.setState(
+												{
+													showActiveTabUnreadBadges:
+														!instance.state.showActiveTabUnreadBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showActiveTabUnreadBadges =
+														!instance.props.plugin.settings
+															.showActiveTabUnreadBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
+									},
+									{
+										label: "Show Typing",
+										type: "toggle",
+										id: "activeTabs_Typing",
+										checked: () =>
+											TopBarRef.current.state.showActiveTabTypingBadge,
+										action: () => {
+											instance.setState(
+												{
+													showActiveTabTypingBadge:
+														!instance.state.showActiveTabTypingBadge,
+												},
+												() => {
+													instance.props.plugin.settings.showActiveTabTypingBadge =
+														!instance.props.plugin.settings
+															.showActiveTabTypingBadge;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
+									},
+									{
+										label: "Show Empty Mentions/Unreads",
+										type: "toggle",
+										id: "activeTabs_Empty",
+										checked: () =>
+											TopBarRef.current.state.showEmptyActiveTabBadges,
+										action: () => {
+											instance.setState(
+												{
+													showEmptyActiveTabBadges:
+														!instance.state.showEmptyActiveTabBadges,
+												},
+												() => {
+													instance.props.plugin.settings.showEmptyActiveTabBadges =
+														!instance.props.plugin.settings
+															.showEmptyActiveTabBadges;
+													instance.props.plugin.saveSettings();
+												},
+											);
+										},
+									},
+								],
+							},
+						],
+					}),
+				},
+			])(props),
 		{
 			position: "right",
 			align: "top",
