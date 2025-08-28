@@ -2823,7 +2823,6 @@ const FavBar = (props) => (
 			CreateFavBarContextMenu(props, e);
 		}}
 	>
-		{props.leading}
 		<FavFolders {...props} />
 		{props.favs.length > 0 ? (
 			<FavItems group={null} {...props} />
