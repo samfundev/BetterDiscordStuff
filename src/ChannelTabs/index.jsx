@@ -2699,7 +2699,6 @@ function HorizontalScroll(props) {
 
 const TabBar = (props) => (
 	<div className="channelTabs-tabContainer" data-tab-count={props.tabs.length}>
-		{props.leading}
 		<div className="channelTabs-tabNav">
 			<div
 				className="channelTabs-tabNavLeft"
