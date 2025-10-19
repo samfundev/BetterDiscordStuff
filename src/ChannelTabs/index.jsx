@@ -143,6 +143,7 @@ const noDragClasses = [
 	standardSidebarView, // Settings view
 	backdropClasses?.backdrop, // Anything that has a backdrop
 ].filter((x) => x);
+const systemBarClasses = getModule(byKeys("systemBar"));
 
 const Icons = {
 	XSmallIcon: () => (
@@ -2898,6 +2899,7 @@ const TopBar = class TopBar extends React.Component {
 		this.hideFavBar = this.hideFavBar.bind(this);
 		this.tabRefs = React.createRef();
 		this.tabRefs.current = [];
+		this.containerRef = React.createRef();
 	}
 
 	//#endregion
@@ -3350,7 +3352,7 @@ const TopBar = class TopBar extends React.Component {
 		);
 
 		return (
-			<div id="channelTabs-container">
+			<div id="channelTabs-container" ref={this.containerRef}>
 				{!this.state.showTabBar ? null : (
 					<TabBar
 						leading={this.props.leading}
@@ -3412,6 +3414,25 @@ const TopBar = class TopBar extends React.Component {
 				)}
 			</div>
 		);
+	}
+
+	componentDidMount() {
+		const container = this.containerRef.current;
+		function update() {
+			document.body.style.setProperty(
+				"--custom-app-top-bar-height",
+				`${container.clientHeight}px`,
+			);
+		}
+
+		this.observer = new ResizeObserver(update);
+		this.observer.observe(container);
+		update();
+	}
+
+	componentWillUnmount() {
+		this.observer.disconnect();
+		document.body.style.removeProperty("--custom-app-top-bar-height");
 	}
 
 	//#endregion
@@ -3672,6 +3693,10 @@ div:has(> div > #channelTabs-container) {
 
 ${noDragClasses.map((x) => `.${x}`).join(", ")}, [role="menu"] {
 	-webkit-app-region: no-drag;
+}
+
+.${systemBarClasses.systemBar}, .channelTabs-trailing {
+	--custom-app-top-bar-height: 32px;
 }
 
 /*
