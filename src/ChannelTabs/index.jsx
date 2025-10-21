@@ -139,9 +139,11 @@ const IconUtilities = getModule(byKeys("getChannelIconURL"));
 const standardSidebarView =
 	BdApi.Webpack.getByKeys("standardSidebarView")?.standardSidebarView ?? "";
 const backdropClasses = getModule(byKeys("backdrop", "withLayer"));
+const scrimClasses = getModule(byKeys("scrim"));
 const noDragClasses = [
 	standardSidebarView, // Settings view
 	backdropClasses?.backdrop, // Anything that has a backdrop
+	scrimClasses?.scrim, // Modal scrims
 ].filter((x) => x);
 const systemBarClasses = getModule(byKeys("systemBar"));
 
