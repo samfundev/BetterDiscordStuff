@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.8.2
+ * @version 2.8.3
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -31,6 +31,12 @@
 
 @else@*/
 const CHANGES = {
+	"2.8.3": {
+		fixed: [
+			"Fixed the topbar preventing interaction with image viewer controls",
+			"Fixed compatiblity with CollapsibleUI",
+		],
+	},
 	"2.8.2": {
 		fixed: ["Fixed title covering favorites"],
 	},
@@ -230,12 +236,16 @@ var IconUtilities = getModule(byKeys("getChannelIconURL"));
 var standardSidebarView =
 	BdApi.Webpack.getByKeys("standardSidebarView")?.standardSidebarView ?? "";
 var backdropClasses = getModule(byKeys("backdrop", "withLayer"));
+var scrimClasses = getModule(byKeys("scrim"));
 var noDragClasses = [
 	standardSidebarView,
 	// Settings view
 	backdropClasses?.backdrop,
 	// Anything that has a backdrop
+	scrimClasses?.scrim,
+	// Modal scrims
 ].filter((x) => x);
+var systemBarClasses = getModule(byKeys("systemBar"));
 var Icons = {
 	XSmallIcon: () =>
 		/* @__PURE__ */ React.createElement(
@@ -2965,6 +2975,7 @@ var TopBar = class TopBar2 extends React.Component {
 		this.hideFavBar = this.hideFavBar.bind(this);
 		this.tabRefs = React.createRef();
 		this.tabRefs.current = [];
+		this.containerRef = React.createRef();
 	}
 	//#endregion
 	//#region Tab Functions
@@ -3387,7 +3398,7 @@ var TopBar = class TopBar2 extends React.Component {
 		);
 		return /* @__PURE__ */ React.createElement(
 			"div",
-			{ id: "channelTabs-container" },
+			{ id: "channelTabs-container", ref: this.containerRef },
 			!this.state.showTabBar
 				? null
 				: /* @__PURE__ */ React.createElement(TabBar, {
@@ -3448,6 +3459,22 @@ var TopBar = class TopBar2 extends React.Component {
 						hideFavBar: this.hideFavBar,
 					}),
 		);
+	}
+	componentDidMount() {
+		const container = this.containerRef.current;
+		function update() {
+			document.body.style.setProperty(
+				"--custom-app-top-bar-height",
+				`${container.clientHeight}px`,
+			);
+		}
+		this.observer = new ResizeObserver(update);
+		this.observer.observe(container);
+		update();
+	}
+	componentWillUnmount() {
+		this.observer.disconnect();
+		document.body.style.removeProperty("--custom-app-top-bar-height");
 	}
 	//#endregion
 };
@@ -3681,6 +3708,10 @@ div:has(> div > #channelTabs-container) {
 
 ${noDragClasses.map((x) => `.${x}`).join(", ")}, [role="menu"] {
 	-webkit-app-region: no-drag;
+}
+
+.${systemBarClasses.systemBar}, .channelTabs-trailing {
+	--custom-app-top-bar-height: 32px;
 }
 
 /*
