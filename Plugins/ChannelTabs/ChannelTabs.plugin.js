@@ -229,7 +229,7 @@ var Slider = getModule(
 );
 var NavShortcuts = getModule(byKeys("NAVIGATE_BACK", "NAVIGATE_FORWARD"));
 var [TitleBar, TitleBarKey] = Webpack.getWithKey(
-	byStrings(".PlatformTypes.WINDOWS&&(0,", "title"),
+	byStrings("leading", "trailing", "title", "windowKey"),
 );
 if (!TitleBar) missingModule({ name: "TitleBar", fatal: true });
 var IconUtilities = getModule(byKeys("getChannelIconURL"));
