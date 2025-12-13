@@ -263,7 +263,7 @@ var Icons = {
 				viewBox: "0 0 24 24",
 			},
 			/* @__PURE__ */ React.createElement("path", {
-				fill: "var(--interactive-normal)",
+				fill: "var(--interactive-text-default)",
 				d: "M17.3 18.7a1 1 0 0 0 1.4-1.4L13.42 12l5.3-5.3a1 1 0 0 0-1.42-1.4L12 10.58l-5.3-5.3a1 1 0 0 0-1.4 1.42L10.58 12l-5.3 5.3a1 1 0 1 0 1.42 1.4L12 13.42l5.3 5.3Z",
 				class: "",
 			}),
@@ -281,7 +281,7 @@ var Icons = {
 				viewBox: "0 0 24 24",
 			},
 			/* @__PURE__ */ React.createElement("path", {
-				fill: "var(--interactive-normal)",
+				fill: "var(--interactive-text-default)",
 				d: "M13 6a1 1 0 1 0-2 0v5H6a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5V6Z",
 				class: "",
 			}),
@@ -299,7 +299,7 @@ var Icons = {
 				viewBox: "0 0 24 24",
 			},
 			/* @__PURE__ */ React.createElement("path", {
-				fill: "var(--interactive-normal)",
+				fill: "var(--interactive-text-default)",
 				d: "M15.7 3.3a1 1 0 0 1 0 1.4L8.42 12l7.3 7.3a1 1 0 0 1-1.42 1.4l-8-8a1 1 0 0 1 0-1.4l8-8a1 1 0 0 1 1.42 0Z",
 			}),
 		),
@@ -316,7 +316,7 @@ var Icons = {
 				viewBox: "0 0 24 24",
 			},
 			/* @__PURE__ */ React.createElement("path", {
-				fill: "var(--interactive-normal)",
+				fill: "var(--interactive-text-default)",
 				d: "M8.3 3.3a1 1 0 0 0 0 1.4l7.29 7.3-7.3 7.3a1 1 0 1 0 1.42 1.4l8-8a1 1 0 0 0 0-1.4l-8-8a1 1 0 0 0-1.42 0Z",
 			}),
 		),
@@ -367,21 +367,21 @@ var SettingsMenuIcon = /* @__PURE__ */ React.createElement(
 		viewBox: "0 0 80 80",
 	},
 	/* @__PURE__ */ React.createElement("rect", {
-		fill: "var(--interactive-normal)",
+		fill: "var(--interactive-text-default)",
 		x: "20",
 		y: "15",
 		width: "50",
 		height: "10",
 	}),
 	/* @__PURE__ */ React.createElement("rect", {
-		fill: "var(--interactive-normal)",
+		fill: "var(--interactive-text-default)",
 		x: "20",
 		y: "35",
 		width: "50",
 		height: "10",
 	}),
 	/* @__PURE__ */ React.createElement("rect", {
-		fill: "var(--interactive-normal)",
+		fill: "var(--interactive-text-default)",
 		x: "20",
 		y: "55",
 		width: "50",
@@ -3591,17 +3591,17 @@ module.exports = class ChannelTabs {
 
 	#app-mount .channelTabs-tabName {
 		color: transparent;
-		background-color: var(--interactive-normal);
+		background-color: var(--interactive-text-default);
 		opacity: 0.5;
 	}
 	
 	#app-mount .channelTabs-selected .channelTabs-tabName {
-		background-color: var(--interactive-active);
+		background-color: var(--interactive-text-active);
 	}
 	
 	#app-mount .channelTabs-favName {
 		color: transparent;
-		background-color: var(--interactive-normal);
+		background-color: var(--interactive-text-default);
 		opacity: 0.5;
 	}
 `;
@@ -3664,12 +3664,12 @@ module.exports = class ChannelTabs {
 	
 	/* if clickable */
 	.channelTabs-tabContainer .channelTabs-tabNav>div:hover {
-		color: var(--interactive-hover);
+		color: var(--interactive-text-hover);
 		background-color: var(--background-modifier-hover);
 	}
 	
 	.channelTabs-tabContainer .channelTabs-tabNav>div:active {
-		color: var(--interactive-active);
+		color: var(--interactive-text-active);
 		background-color: var(--background-modifier-active);
 	}
 	
@@ -3687,7 +3687,7 @@ module.exports = class ChannelTabs {
 		width: 32px;
 		border-radius: 4px;
 		margin-right: 3px;
-		color: var(--interactive-normal);
+		color: var(--interactive-text-default);
 	}
 `;
 		const BaseStyle = `
@@ -3782,11 +3782,11 @@ ${noDragClasses.map((x) => `.${x}`).join(", ")}, [role="menu"] {
 .channelTabs-tab.channelTabs-unread:not(.channelTabs-selected),
 .channelTabs-tab.channelTabs-unread:not(.channelTabs-selected),
 .channelTabs-tab.channelTabs-mention:not(.channelTabs-selected) {
-	color: var(--interactive-hover);
+	color: var(--interactive-text-hover);
 }
 .channelTabs-tab.channelTabs-unread:not(.channelTabs-selected):hover,
 .channelTabs-tab.channelTabs-mention:not(.channelTabs-selected):hover {
-	color: var(--interactive-active);
+	color: var(--interactive-text-active);
 }
 
 /*
@@ -3832,19 +3832,19 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 	margin-right: 6px;
 	font-size: var(--channelTabs-tabNameFontSize);
 	line-height: normal;
-	color: var(--interactive-normal);
+	color: var(--interactive-text-default);
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
 
 .channelTabs-tab:not(.channelTabs-selected):hover .channelTabs-tabName {
-	color: var(--interactive-hover);
+	color: var(--interactive-text-hover);
 }
 
 .channelTabs-tab:not(.channelTabs-selected):active .channelTabs-tabName,
 .channelTabs-tab.channelTabs-selected .channelTabs-tabName {
-	color: var(--interactive-active);
+	color: var(--interactive-text-active);
 }
 
 /*
@@ -3901,7 +3901,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 	flex-shrink: 0;
 	right: 6px;
 	border-radius: 4px;
-	color: var(--interactive-normal);
+	color: var(--interactive-text-default);
 	cursor: pointer;
 }
 
@@ -3921,18 +3921,18 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 	margin: 0 6px 3px 6px;
 	border-radius: 4px;
 	cursor: pointer;
-	color: var(--interactive-normal);
+	color: var(--interactive-text-default);
 	margin-right: 6px;
 }
 
 .channelTabs-newTab:hover {
 	background: var(--background-modifier-hover);
-	color: var(--interactive-hover);
+	color: var(--interactive-text-hover);
 }
 
 .channelTabs-newTab:active {
 	background: var(--background-modifier-active);
-	color: var(--interactive-active);
+	color: var(--interactive-text-active);
 }
 
 .channelTabs-closeTab:hover {
@@ -3950,17 +3950,17 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 	margin: 0 64px 3px 0;
 	border-radius: 4px;
 	cursor: pointer;
-	color: var(--interactive-normal);
+	color: var(--interactive-text-default);
 }
 
 .channelTabs-tabListDropdown:hover {
 	background: var(--background-modifier-hover);
-	color: var(--interactive-hover);
+	color: var(--interactive-text-hover);
 }
 
 .channelTabs-tabListDropdown:active {
 	background: var(--background-modifier-active);
-	color: var(--interactive-active);
+	color: var(--interactive-text-active);
 }
 
 .channelTabs-tabListDropdown svg {
@@ -4143,18 +4143,18 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 	margin-left: 6px;
 	font-size: var(--channelTabs-tabNameFontSize);
 	line-height: normal;
-	color: var(--interactive-normal);
+	color: var(--interactive-text-default);
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
 
 .channelTabs-fav:hover .channelTabs-favName {
-	color: var(--interactive-hover);
+	color: var(--interactive-text-hover);
 }
 
 .channelTabs-fav:active .channelTabs-favName {
-	color: var(--interactive-active);
+	color: var(--interactive-text-active);
 }
 
 .channelTabs-noFavNotice {
@@ -4181,7 +4181,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 	max-width: var(--channelTabs-tabWidth);
 	padding: 0 6px;
 	font-size: 12px;
-	color: var(--interactive-normal);
+	color: var(--interactive-text-default);
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
