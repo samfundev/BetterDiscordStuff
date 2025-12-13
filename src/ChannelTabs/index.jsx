@@ -3648,12 +3648,12 @@ module.exports = class ChannelTabs {
 	/* if clickable */
 	.channelTabs-tabContainer .channelTabs-tabNav>div:hover {
 		color: var(--interactive-text-hover);
-		background-color: var(--background-modifier-hover);
+		background-color: var(--interactive-background-hover);
 	}
 	
 	.channelTabs-tabContainer .channelTabs-tabNav>div:active {
 		color: var(--interactive-text-active);
-		background-color: var(--background-modifier-active);
+		background-color: var(--interactive-background-active);
 	}
 	
 	/* if only 1 tab */
@@ -3730,7 +3730,7 @@ ${noDragClasses.map((x) => `.${x}`).join(", ")}, [role="menu"] {
 
 #channelTabs-container>:not(#channelTabs-settingsMenu)+div {
 	padding-top: 4px;
-	border-top: 1px solid var(--background-modifier-accent);
+	border-top: 1px solid var(--border-normal);
 }
 
 .channelTabs-tab {
@@ -3752,15 +3752,15 @@ ${noDragClasses.map((x) => `.${x}`).join(", ")}, [role="menu"] {
 }
 
 .channelTabs-tab:not(.channelTabs-selected):hover {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 }
 
 .channelTabs-tab:not(.channelTabs-selected):active {
-	background: var(--background-modifier-active);
+	background: var(--interactive-background-active);
 }
 
 .channelTabs-tab.channelTabs-selected {
-	background: var(--background-modifier-selected);
+	background: var(--interactive-background-selected);
 }
 
 .channelTabs-tab.channelTabs-unread:not(.channelTabs-selected),
@@ -3796,7 +3796,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 }
 
 #channelTabs-settingsMenu:hover {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 }
 
 .channelTabs-settingsIcon {
@@ -3910,12 +3910,12 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 }
 
 .channelTabs-newTab:hover {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 	color: var(--interactive-text-hover);
 }
 
 .channelTabs-newTab:active {
-	background: var(--background-modifier-active);
+	background: var(--interactive-background-active);
 	color: var(--interactive-text-active);
 }
 
@@ -3938,12 +3938,12 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 }
 
 .channelTabs-tabListDropdown:hover {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 	color: var(--interactive-text-hover);
 }
 
 .channelTabs-tabListDropdown:active {
-	background: var(--background-modifier-active);
+	background: var(--interactive-background-active);
 	color: var(--interactive-text-active);
 }
 
@@ -4110,11 +4110,11 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 }
 
 .channelTabs-fav:hover {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 }
 
 .channelTabs-fav:active {
-	background: var(--background-modifier-active);
+	background: var(--interactive-background-active);
 }
 
 .channelTabs-favIcon {
@@ -4177,7 +4177,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 }
 
 .channelTabs-favGroup:hover .channelTabs-favGroupBtn {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 }
 
 .channelTabs-favGroup-content {
@@ -4297,7 +4297,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 			// Only patch if this is the main window.
 			if (props.windowKey !== undefined) return;
 
-			returnValue.props.style = { paddingLeft: 0 };
+			returnValue.props.style = { paddingInline: 0 };
 			returnValue.props.children = (
 				<TopBar
 					leading={returnValue.props.children[1]}
