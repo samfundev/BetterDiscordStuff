@@ -3779,7 +3779,7 @@ ${noDragClasses.map((x) => `.${x}`).join(", ")}, [role="menu"] {
 }
 
 .channelTabs-tab.channelTabs-selected {
-	background: var(--background-modifier-selected);
+	background: var(--interactive-background-selected);
 }
 
 .channelTabs-tab.channelTabs-unread:not(.channelTabs-selected),
