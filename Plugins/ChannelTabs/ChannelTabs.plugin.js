@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.8.5
+ * @version 2.8.6
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -31,6 +31,9 @@
 
 @else@*/
 const CHANGES = {
+	"2.8.6": {
+		fixed: ["Fixed tab colors"],
+	},
 	"2.8.5": {
 		fixed: ["Fixed text disappearing caused by Discord's CSS update"],
 	},
@@ -3668,12 +3671,12 @@ module.exports = class ChannelTabs {
 	/* if clickable */
 	.channelTabs-tabContainer .channelTabs-tabNav>div:hover {
 		color: var(--interactive-text-hover);
-		background-color: var(--background-modifier-hover);
+		background-color: var(--interactive-background-hover);
 	}
 	
 	.channelTabs-tabContainer .channelTabs-tabNav>div:active {
 		color: var(--interactive-text-active);
-		background-color: var(--background-modifier-active);
+		background-color: var(--interactive-background-active);
 	}
 	
 	/* if only 1 tab */
@@ -3749,7 +3752,7 @@ ${noDragClasses.map((x) => `.${x}`).join(", ")}, [role="menu"] {
 
 #channelTabs-container>:not(#channelTabs-settingsMenu)+div {
 	padding-top: 4px;
-	border-top: 1px solid var(--background-modifier-accent);
+	border-top: 1px solid var(--border-normal);
 }
 
 .channelTabs-tab {
@@ -3771,11 +3774,11 @@ ${noDragClasses.map((x) => `.${x}`).join(", ")}, [role="menu"] {
 }
 
 .channelTabs-tab:not(.channelTabs-selected):hover {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 }
 
 .channelTabs-tab:not(.channelTabs-selected):active {
-	background: var(--background-modifier-active);
+	background: var(--interactive-background-active);
 }
 
 .channelTabs-tab.channelTabs-selected {
@@ -3815,7 +3818,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 }
 
 #channelTabs-settingsMenu:hover {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 }
 
 .channelTabs-settingsIcon {
@@ -3929,12 +3932,12 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 }
 
 .channelTabs-newTab:hover {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 	color: var(--interactive-text-hover);
 }
 
 .channelTabs-newTab:active {
-	background: var(--background-modifier-active);
+	background: var(--interactive-background-active);
 	color: var(--interactive-text-active);
 }
 
@@ -3957,12 +3960,12 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 }
 
 .channelTabs-tabListDropdown:hover {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 	color: var(--interactive-text-hover);
 }
 
 .channelTabs-tabListDropdown:active {
-	background: var(--background-modifier-active);
+	background: var(--interactive-background-active);
 	color: var(--interactive-text-active);
 }
 
@@ -4129,11 +4132,11 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 }
 
 .channelTabs-fav:hover {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 }
 
 .channelTabs-fav:active {
-	background: var(--background-modifier-active);
+	background: var(--interactive-background-active);
 }
 
 .channelTabs-favIcon {
@@ -4196,7 +4199,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 }
 
 .channelTabs-favGroup:hover .channelTabs-favGroupBtn {
-	background: var(--background-modifier-hover);
+	background: var(--interactive-background-hover);
 }
 
 .channelTabs-favGroup-content {
@@ -4304,7 +4307,7 @@ html:not(.platform-win) #channelTabs-settingsMenu {
 		if (promiseState.cancelled) return;
 		Patcher.after(TitleBar, TitleBarKey, (thisObject, [props], returnValue) => {
 			if (props.windowKey !== void 0) return;
-			returnValue.props.style = { paddingLeft: 0 };
+			returnValue.props.style = { paddingInline: 0 };
 			returnValue.props.children = /* @__PURE__ */ React.createElement(TopBar, {
 				leading: returnValue.props.children[1],
 				trailing: returnValue.props.children[2],
