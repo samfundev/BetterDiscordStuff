@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.8.6
+ * @version 2.8.7
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -31,6 +31,9 @@
 
 @else@*/
 const CHANGES = {
+	"2.8.7": {
+		fixed: ["Fixed modals not working"],
+	},
 	"2.8.6": {
 		fixed: ["Fixed tab colors"],
 	},
@@ -3108,7 +3111,7 @@ var TopBar = class TopBar2 extends React.Component {
 	}
 	renameFav(currentName, favIndex) {
 		let name = currentName;
-		BdApi.showConfirmationModal(
+		BdApi.UI.showConfirmationModal(
 			"What should the new name be?",
 			/* @__PURE__ */ React.createElement(Textbox, {
 				onChange: (newContent) => (name = newContent.trim()),
@@ -3192,7 +3195,7 @@ var TopBar = class TopBar2 extends React.Component {
 	}
 	addFavGroup() {
 		let name = "New Group";
-		BdApi.showConfirmationModal(
+		BdApi.UI.showConfirmationModal(
 			"What should the new name be?",
 			/* @__PURE__ */ React.createElement(Textbox, {
 				onChange: (newContent) => (name = newContent.trim()),
@@ -3215,7 +3218,7 @@ var TopBar = class TopBar2 extends React.Component {
 	}
 	renameFavGroup(currentName, groupId) {
 		let name = currentName;
-		BdApi.showConfirmationModal(
+		BdApi.UI.showConfirmationModal(
 			"What should the new name be?",
 			/* @__PURE__ */ React.createElement(Textbox, {
 				onChange: (newContent) => (name = newContent.trim()),
