@@ -3035,7 +3035,7 @@ const TopBar = class TopBar extends React.Component {
 
 	renameFav(currentName, favIndex) {
 		let name = currentName;
-		BdApi.showConfirmationModal(
+		BdApi.UI.showConfirmationModal(
 			"What should the new name be?",
 			<Textbox onChange={(newContent) => (name = newContent.trim())} />,
 			{
@@ -3126,7 +3126,7 @@ const TopBar = class TopBar extends React.Component {
 
 	addFavGroup() {
 		let name = "New Group";
-		BdApi.showConfirmationModal(
+		BdApi.UI.showConfirmationModal(
 			"What should the new name be?",
 			<Textbox onChange={(newContent) => (name = newContent.trim())} />,
 			{
@@ -3148,7 +3148,7 @@ const TopBar = class TopBar extends React.Component {
 
 	renameFavGroup(currentName, groupId) {
 		let name = currentName;
-		BdApi.showConfirmationModal(
+		BdApi.UI.showConfirmationModal(
 			"What should the new name be?",
 			<Textbox onChange={(newContent) => (name = newContent.trim())} />,
 			{
