@@ -2937,7 +2937,7 @@ const TopBar = class TopBar extends React.Component {
 			},
 			this.props.plugin.saveSettings,
 		);
-		this.tabRefs.current[tabIndex].scrollIntoView({ behavior: "smooth" });
+		this.tabRefs.current[tabIndex]?.scrollIntoView({ behavior: "smooth" });
 		switching = true;
 		NavigationUtils.transitionTo(this.state.tabs[tabIndex].url);
 		switching = false;
