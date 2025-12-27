@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "node --watch lib/dev.ts",
+		"build": "node lib/dev.ts --build",
 		"format": "prettier --write ."
 	},
 	"maintainers": [

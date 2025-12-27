@@ -10,6 +10,11 @@ const ctx = await context({
 	plugins: [bdPlugin],
 });
 
+if (process.argv.includes("--build")) {
+	await ctx.rebuild();
+	process.exit();
+}
+
 await ctx.watch();
 
 // watch for changes to package.json and reload the context
