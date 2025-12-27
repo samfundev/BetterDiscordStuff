@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.8.7
+ * @version 2.8.8
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -31,6 +31,9 @@
 
 @else@*/
 const CHANGES = {
+	"2.8.8": {
+		fixed: ["Fixed crash when creating a new tab when the tab bar is hidden"],
+	},
 	"2.8.7": {
 		fixed: ["Fixed modals not working"],
 	},
@@ -3019,7 +3022,7 @@ var TopBar = class TopBar2 extends React.Component {
 			},
 			this.props.plugin.saveSettings,
 		);
-		this.tabRefs.current[tabIndex].scrollIntoView({ behavior: "smooth" });
+		this.tabRefs.current[tabIndex]?.scrollIntoView({ behavior: "smooth" });
 		switching = true;
 		NavigationUtils.transitionTo(this.state.tabs[tabIndex].url);
 		switching = false;
