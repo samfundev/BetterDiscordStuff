@@ -4,7 +4,7 @@ import { basename, dirname, join } from "node:path";
 import type { OnStartResult, Plugin } from "esbuild";
 import type { Meta } from "betterdiscord";
 import prettier from "prettier";
-import { simpleGit, type DefaultLogFields, type ListLogLine } from "simple-git";
+import { simpleGit, type DefaultLogFields } from "simple-git";
 
 const git = simpleGit();
 
