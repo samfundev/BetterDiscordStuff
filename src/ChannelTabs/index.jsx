@@ -85,7 +85,7 @@ const { byKeys, byStrings, byStoreName, bySource } = Filters;
 const NavigationUtils = {
 	transitionToGuild: getModule(byKeys("transitionToGuildSync"))
 		?.transitionToGuildSync,
-	transitionTo: getModule(byStrings(`"transitionTo - Transitioning to "`), {
+	transitionTo: getModule(byStrings("transitionTo - Transitioning to "), {
 		searchExports: true,
 	}),
 };
