@@ -2,7 +2,7 @@
  * @name ChannelTabs
  * @author samfundev, l0c4lh057, CarJem Generations
  * @description Allows you to have multiple tabs and bookmark channels.
- * @version 2.8.9
+ * @version 2.8.10
  * @authorId 76052829285916672
  * @donate https://github.com/sponsors/samfundev
  * @source https://github.com/samfundev/BetterDiscordStuff/blob/master/src/ChannelTabs/index.jsx
@@ -31,6 +31,12 @@
 
 @else@*/
 const CHANGES = {
+	"2.8.10": {
+		fixed: ["Fixed plugin not starting after Discord's rspack update"],
+	},
+	"2.8.9": {
+		fixed: ["Fixed plugin not being able to find Discord's navigation method"],
+	},
 	"2.8.8": {
 		fixed: ["Fixed crash when creating a new tab when the tab bar is hidden"],
 	},
