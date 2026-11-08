@@ -169,6 +169,22 @@ ${trace}`);
 		});
 	}
 }
+function findClassName(name, ...siblings) {
+	const pick = (m, n) =>
+		typeof m[n] === "string"
+			? m[n]
+			: Object.values(m).find(
+					(v) => typeof v === "string" && v.split(" ")[0].startsWith(`${n}_`),
+				);
+	const mod = getModule(
+		(m) =>
+			m &&
+			typeof m === "object" &&
+			!Array.isArray(m) &&
+			[name, ...siblings].every((n) => pick(m, n)),
+	);
+	return { [name]: mod ? pick(mod, name).split(" ")[0] : void 0 };
+}
 var FakeUnreadStateStore = class extends require("events").EventEmitter {
 	getUnreadCount() {
 		return 0;
@@ -203,7 +219,8 @@ var Permissions = getModule(byKeys("computePermissions"));
 var SelectedChannelStore = getModule(byStoreName("SelectedChannelStore"));
 var SelectedGuildStore = getModule(byStoreName("SelectedGuildStore"));
 var ChannelStore = getModule(byStoreName("ChannelStore"));
-var UserStore = getModule(byStoreName("UserStore"));
+var UserStore =
+	Webpack.getStore?.("UserStore") ?? getModule(byStoreName("UserStore"));
 var UserTypingStore = getModule(byStoreName("TypingStore"));
 var RelationshipStore = getModule(byStoreName("RelationshipStore"));
 var GuildStore = getModule(byStoreName("GuildStore"));
@@ -250,8 +267,8 @@ if (!TitleBar) missingModule({ name: "TitleBar", fatal: true });
 var IconUtilities = getModule(byKeys("getChannelIconURL"));
 var standardSidebarView =
 	BdApi.Webpack.getByKeys("standardSidebarView")?.standardSidebarView ?? "";
-var backdropClasses = getModule(byKeys("backdrop", "withLayer"));
-var scrimClasses = getModule(byKeys("scrim"));
+var backdropClasses = findClassName("backdrop", "withLayer");
+var scrimClasses = findClassName("scrim");
 var noDragClasses = [
 	standardSidebarView,
 	// Settings view
@@ -260,7 +277,7 @@ var noDragClasses = [
 	scrimClasses?.scrim,
 	// Modal scrims
 ].filter((x) => x);
-var systemBarClasses = getModule(byKeys("systemBar"));
+var systemBarClasses = findClassName("systemBar");
 var Icons = {
 	XSmallIcon: () =>
 		/* @__PURE__ */ React.createElement(

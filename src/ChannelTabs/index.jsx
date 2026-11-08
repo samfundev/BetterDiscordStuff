@@ -56,6 +56,23 @@ function missingModule({ name = "<unnamed>", feature, fatal = false }) {
 	}
 }
 
+function findClassName(name, ...siblings) {
+	const pick = (m, n) =>
+		typeof m[n] === "string"
+			? m[n]
+			: Object.values(m).find(
+					(v) => typeof v === "string" && v.split(" ")[0].startsWith(`${n}_`),
+				);
+	const mod = getModule(
+		(m) =>
+			m &&
+			typeof m === "object" &&
+			!Array.isArray(m) &&
+			[name, ...siblings].every((n) => pick(m, n)),
+	);
+	return { [name]: mod ? pick(mod, name).split(" ")[0] : undefined };
+}
+
 class FakeUnreadStateStore extends require("events").EventEmitter {
 	getUnreadCount() {
 		return 0;
@@ -93,7 +110,8 @@ const Permissions = getModule(byKeys("computePermissions"));
 const SelectedChannelStore = getModule(byStoreName("SelectedChannelStore"));
 const SelectedGuildStore = getModule(byStoreName("SelectedGuildStore"));
 const ChannelStore = getModule(byStoreName("ChannelStore"));
-const UserStore = getModule(byStoreName("UserStore"));
+const UserStore =
+	Webpack.getStore?.("UserStore") ?? getModule(byStoreName("UserStore"));
 const UserTypingStore = getModule(byStoreName("TypingStore"));
 const RelationshipStore = getModule(byStoreName("RelationshipStore"));
 const GuildStore = getModule(byStoreName("GuildStore"));
@@ -138,14 +156,14 @@ const IconUtilities = getModule(byKeys("getChannelIconURL"));
 
 const standardSidebarView =
 	BdApi.Webpack.getByKeys("standardSidebarView")?.standardSidebarView ?? "";
-const backdropClasses = getModule(byKeys("backdrop", "withLayer"));
-const scrimClasses = getModule(byKeys("scrim"));
+const backdropClasses = findClassName("backdrop", "withLayer");
+const scrimClasses = findClassName("scrim");
 const noDragClasses = [
 	standardSidebarView, // Settings view
 	backdropClasses?.backdrop, // Anything that has a backdrop
 	scrimClasses?.scrim, // Modal scrims
 ].filter((x) => x);
-const systemBarClasses = getModule(byKeys("systemBar"));
+const systemBarClasses = findClassName("systemBar");
 
 const Icons = {
 	XSmallIcon: () => (
