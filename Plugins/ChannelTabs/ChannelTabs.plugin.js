@@ -175,22 +175,6 @@ ${trace}`);
 		});
 	}
 }
-function findClassName(name, ...siblings) {
-	const pick = (m, n) =>
-		typeof m[n] === "string"
-			? m[n]
-			: Object.values(m).find(
-					(v) => typeof v === "string" && v.split(" ")[0].startsWith(`${n}_`),
-				);
-	const mod = getModule(
-		(m) =>
-			m &&
-			typeof m === "object" &&
-			!Array.isArray(m) &&
-			[name, ...siblings].every((n) => pick(m, n)),
-	);
-	return { [name]: mod ? pick(mod, name).split(" ")[0] : void 0 };
-}
 var FakeUnreadStateStore = class extends require("events").EventEmitter {
 	getUnreadCount() {
 		return 0;
@@ -273,8 +257,8 @@ if (!TitleBar) missingModule({ name: "TitleBar", fatal: true });
 var IconUtilities = getModule(byKeys("getChannelIconURL"));
 var standardSidebarView =
 	BdApi.Webpack.getByKeys("standardSidebarView")?.standardSidebarView ?? "";
-var backdropClasses = findClassName("backdrop", "withLayer");
-var scrimClasses = findClassName("scrim");
+var backdropClasses = getModule(byKeys("backdrop"));
+var scrimClasses = getModule(byKeys("scrim"));
 var noDragClasses = [
 	standardSidebarView,
 	// Settings view
@@ -283,7 +267,7 @@ var noDragClasses = [
 	scrimClasses?.scrim,
 	// Modal scrims
 ].filter((x) => x);
-var systemBarClasses = findClassName("systemBar");
+var systemBarClasses = getModule(byKeys("systemBar"));
 var Icons = {
 	XSmallIcon: () =>
 		/* @__PURE__ */ React.createElement(
